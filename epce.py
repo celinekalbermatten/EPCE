@@ -53,6 +53,32 @@ l1 = torch.nn.L1Loss()
 perceptual_loss = EPCE.VGGLoss()
 # Define the optimizer
 optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
+
+"""
+# ========================================
+# GPU configuration
+# ========================================
+
+str_ids = opt.gpu_ids.split(",")
+opt.gpu_ids = []
+for str_id in str_ids:
+    id = int(str_id)
+    if id >= 0:
+        opt.gpu_ids.append(id)
+
+# set GPU device
+if len(opt.gpu_ids) > 0:
+    assert torch.cuda.is_available()
+    assert torch.cuda.device_count() >= len(opt.gpu_ids)
+
+    torch.cuda.set_device(opt.gpu_ids[0])
+
+    if len(opt.gpu_ids) > 1:
+        model = torch.nn.DataParallel(model, device_ids=opt.gpu_ids)
+
+    model.cuda()
+"""
+
 # Set the device (CPU or GPU)
 device = torch.device("cuda")
 
@@ -77,12 +103,15 @@ for epoch in range(opt.epochs):
         update_lr(optimizer, epoch, opt)
     total_loss = 0.0
     for batch in tqdm(train_data_loader):
+    #for batch, data in enumerate(train_data_loader):
         # Move the batch to the device
         optimizer.zero_grad()
         input = batch['ldr_image']
         input = input.to(device)
+        #input = data["ldr_image"].data.cuda()
         output_true = batch['hdr_image']
         output_true = output_true.to(device)
+        #output_true = data["hdr_image"].data.cuda()
         output = model(input)
 
         l1_loss = 0
@@ -120,8 +149,11 @@ for epoch in range(opt.epochs):
         for val_batch, val_data in enumerate(val_data_loader):
             input_val = batch['ldr_image']
             input_val = input_val.to(device)
+            #input_val = val_data["ldr_image"].data.cuda()
+
             ground_truth_val = batch['hdr_image']
             ground_truth_val = ground_truth_val.to(device)
+            #ground_truth_val = val_data["hdr_image"].data.cuda()
             optimizer.zero_grad()
 
             output_val = model(input_val)
