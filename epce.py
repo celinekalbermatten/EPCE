@@ -54,11 +54,14 @@ def get_gpu_info():
     pynvml.nvmlShutdown()
     return gpu_info
 
-# Retrieve and print GPU information
+# Retrieve and print GPU information including free memory
 gpu_info = get_gpu_info()
 for gpu in gpu_info:
     print(f"GPU {gpu['index']} Name: {gpu['name']}")
-
+    print(f"   Total Memory: {gpu['memory_total'] / 1024**2} MB")
+    print(f"   Used Memory : {gpu['memory_used'] / 1024**2} MB")
+    print(f"   Free Memory : {gpu['memory_free'] / 1024**2} MB")
+    print("-" * 20)
 
 
 
