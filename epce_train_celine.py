@@ -116,6 +116,28 @@ perceptual_loss = EPCE.VGGLoss()
 #optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr, betas=(0.9, 0.999))
 optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
 
+# ==================================================
+# Load the checkpoints if continuing training
+# ==================================================
+
+print(opt)
+
+if opt.continue_train:
+    try:
+        start_epoch, model = load_checkpoint(model, opt.ckpt_path)
+
+    except Exception as e:
+        print(e)
+        print("Checkpoint not found! Training from scratch.")
+        start_epoch = 1
+        model.apply(weights_init)
+else:
+    start_epoch = 1
+    model.apply(weights_init)
+
+if opt.print_model:
+    print(model)
+
 """
 # ========================================
 # GPU configuration
@@ -310,6 +332,15 @@ for epoch in range(opt.epochs):
     time_taken = (epoch_finish - epoch_start)
 
     print("End of epoch {}. Time taken: {} s.".format(epoch, int(time_taken)))
+
+    # save the checkpoints for each epoch
+    save_checkpoint(epoch, model)
+
+# ========================================
+# Save the model
+# ========================================
+
+torch.save(model, 'epce.pth')
 
 # ========================================
 # Print the results
