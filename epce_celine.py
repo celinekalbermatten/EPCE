@@ -263,11 +263,11 @@ for epoch in range(opt.epochs):
         for val_batch, val_data in enumerate(val_data_loader):
 
             # get the LDR images
-            input_val = val_batch['ldr_image']
+            input_val = val_data['ldr_image']
             input_val = input_val.to(device)
 
             # get the HDR images
-            ground_truth_val = val_batch['hdr_image']
+            ground_truth_val = val_data['hdr_image']
             ground_truth_val = ground_truth_val.to(device)
 
             output_val = model(input_val)
@@ -276,9 +276,15 @@ for epoch in range(opt.epochs):
             l1_loss_val = 0
             vgg_loss_val = 0
 
-            for i in range(len(output_val)):
+            for image_val in output_val:
+                l1_loss_val += l1(image_val, ground_truth_val)
+                vgg_loss_val += perceptual_loss(image_val, ground_truth_val)
+
+
+            """for i in range(len(output_val)):
               l1_loss_val += l1(output_val[i],ground_truth_val[i])
               vgg_loss_val += perceptual_loss(output_val[i], ground_truth_val[i])
+              """
 
             # average over n iterations
             l1_loss_val /= len(output_val)
@@ -290,30 +296,16 @@ for epoch in range(opt.epochs):
 
             # final loss function
             val_loss = l1_loss_val + (vgg_loss_val * 10)
-            val_losses.append(val_loss)
+            val_losses.append(val_loss.item())
 
     # calculate average validation loss for the entire validation dataset
     average_val_loss = sum(val_losses) / len(val_losses)
     print(f"Average validation Loss: {average_val_loss}")
     losses_validation.append(average_val_loss)
-    print(f"Epoch [{epoch+1}/{opt.epochs}], Average Loss: {average_loss:.4f}")
 
     # set model back to training mode
     model.train()
 
-    if epoch%10 == 0:
-        save_ldr_image(img_tensor=input, batch=0, path="./training_results/ldr_e_{}_b_{}.jpg".format(epoch, batch + 1),)
-            
-        save_hdr_image(img_tensor=output, batch=0, path="./training_results/generated_hdr_e_{}_b_{}.hdr".format(epoch, batch + 1),)
-            
-        save_hdr_image(img_tensor=output_true, batch=0, path="./training_results/gt_hdr_e_{}_b_{}.hdr".format(epoch, batch + 1),)
-      
-
-
-    # Calculate average validation loss for the entire validation dataset
-    average_val_loss = sum(val_losses) / len(val_losses)
-    print(f"Average validation Loss: {average_val_loss}")
-    losses_validation.append(average_val_loss.item())
 
     print(f"Training losses: {losses}")
     print(f"Validation losses: {losses_validation}")
@@ -323,4 +315,13 @@ for epoch in range(opt.epochs):
 
     print("End of epoch {}. Time taken: {} s.".format(epoch, int(time_taken)))
 
-    plot_losses(losses, losses_validation, num_epochs, f"plots/_loss_{num_epochs}_epochs")
+# ========================================
+# Print the results
+# ========================================
+
+print("Training complete!")
+
+print(f"Training losses: {losses_train}")
+print(f"Validation losses: {losses_validation}")
+
+plot_losses(losses_train, losses_validation, num_epochs, f"plots/_loss_{num_epochs}_epochs")
