@@ -306,10 +306,6 @@ for epoch in range(opt.epochs):
     # set model back to training mode
     model.train()
 
-
-    print(f"Training losses: {losses}")
-    print(f"Validation losses: {losses_validation}")
-
     epoch_finish = time.time()
     time_taken = (epoch_finish - epoch_start)
 
