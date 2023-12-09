@@ -108,8 +108,12 @@ model = EPCE.PPVisionTransformer()
 
 # define the loss function
 l1 = torch.nn.L1Loss()
+# TODO: could be 
+#perceptual_loss = VGGLoss()
 perceptual_loss = EPCE.VGGLoss()
 # define the optimizer
+# TODO: could be
+#optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr, betas=(0.9, 0.999))
 optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
 
 """
@@ -155,26 +159,32 @@ model.to(device)
 # Training
 # ========================================
 
+# TODO: maybe not necessary
 # set the model to training mode
 model.train()
+
+# define the number of epochs
+opt.epochs = 200
+num_epochs = 200
+print(f"# of epochs: {num_epochs}")
 
 # initalize the loss lists
 losses_train = []
 losses_validation = []
 
-opt.epochs = 200
-num_epochs = 200
-
 for epoch in range(opt.epochs):
     print(f"-------------- Epoch # {epoch} --------------")
 
     epoch_start = time.time()
-
-    if epoch > opt.lr_decay_after:
-        update_lr(optimizer, epoch, opt)
-
     total_loss = 0.0
 
+    # check whether the learning rate needs to be updated
+    if epoch > opt.lr_decay_after:
+        update_lr(optimizer, epoch, opt)
+        
+    losses_epoch = []
+
+    # training loop
     for batch in tqdm(train_data_loader):
         # move the batch to the device
         optimizer.zero_grad()
@@ -209,6 +219,14 @@ for epoch in range(opt.epochs):
         # TODO: why do we have FHDR loss function here?
         # FHDR loss function
         loss = l1_loss + (vgg_loss * 10)
+        losses_epoch.append(loss.item())
+
+        # backpropagate and optimization step
+        loss.backward()
+        optimizer.step()
+
+        # output is the final reconstructed image so last in the array of outputs of n iterations
+        output = output[-1]
 
         # backpropagate and optimization step
         loss.backward()
@@ -217,9 +235,22 @@ for epoch in range(opt.epochs):
         # accumulate the loss
         total_loss += loss.item()
 
+        # save the results
+        if (batch + 1) % opt.save_results_after == 0: 
+            save_ldr_image(img_tensor=input, batch=0, path="./training_results/ldr_e_{}_b_{}.jpg".format(epoch, batch + 1),)
+            
+            save_hdr_image(img_tensor=output, batch=0, path="./training_results/generated_hdr_e_{}_b_{}.hdr".format(epoch, batch + 1),)
+            
+            save_hdr_image(img_tensor=output_true, batch=0, path="./training_results/gt_hdr_e_{}_b_{}.hdr".format(epoch, batch + 1),)
+    
+
+    print(f"Training loss: {losses_epoch[-1]}")
+    losses_train.append(losses_epoch[-1])
+
     # average loss for the epoch
-    average_loss = total_loss / len(train_data_loader)
-    losses_train.append(average_loss)
+    # TODO: maybe this could also work (new)
+    #average_loss = total_loss / len(train_data_loader)
+    #losses_train.append(average_loss)
 
 # ========================================
 # Validation
@@ -227,7 +258,6 @@ for epoch in range(opt.epochs):
 
     # validation loop -> set the model mode to evaluation
     model.eval()
-
     val_losses = []
     with torch.no_grad():
         for val_batch, val_data in enumerate(val_data_loader):
@@ -239,9 +269,6 @@ for epoch in range(opt.epochs):
             # get the HDR images
             ground_truth_val = val_batch['hdr_image']
             ground_truth_val = ground_truth_val.to(device)
-
-            # TODO: this is not necessary in the validation loop
-            #optimizer.zero_grad()
 
             output_val = model(input_val)
 
@@ -288,7 +315,7 @@ for epoch in range(opt.epochs):
     print(f"Average validation Loss: {average_val_loss}")
     losses_validation.append(average_val_loss.item())
 
-    print(f"Training losses: {losses_train}")
+    print(f"Training losses: {losses}")
     print(f"Validation losses: {losses_validation}")
 
     epoch_finish = time.time()
@@ -296,6 +323,4 @@ for epoch in range(opt.epochs):
 
     print("End of epoch {}. Time taken: {} s.".format(epoch, int(time_taken)))
 
-    plot_losses(losses_train, losses_validation, num_epochs, f"plots/_loss_{num_epochs}_epochs")
-
-
+    plot_losses(losses, losses_validation, num_epochs, f"plots/_loss_{num_epochs}_epochs")
