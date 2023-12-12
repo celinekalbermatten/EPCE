@@ -252,10 +252,6 @@ for epoch in range(opt.epochs):
         # output is the final reconstructed image so last in the array of outputs of n iterations
         output = output[-1]
 
-        # backpropagate and optimization step
-        loss.backward()
-        optimizer.step()
-
         # accumulate the loss
         total_loss += loss.item()
 
