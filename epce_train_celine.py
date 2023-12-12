@@ -128,12 +128,14 @@ if opt.continue_train:
 
     except Exception as e:
         print(e)
-        print("Checkpoint not found! Training from scratch.")
-        start_epoch = 1
-        model.apply(weights_init)
+        print("Checkpoint not found!")
+        #start_epoch = 1
+        #model.apply(weights_init)
 else:
-    start_epoch = 1
-    model.apply(weights_init)
+    #start_epoch = 1
+    #model.apply(weights_init)
+    # TODO: 
+    print('else cest pas biengggggg')
 
 if opt.print_model:
     print(model)
