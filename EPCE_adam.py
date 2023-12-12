@@ -1,10 +1,3 @@
-# The above code is not provided. It appears to be a reference to a research paper titled "High
-# Dynamic Range Image Reconstruction via Deep Explicit Polynomial Curve Estimation" by Jiaqi Tang. The
-# code mentioned in the question is not included in the provided information.
-## High Dynamic Range Image Reconstruction via Deep Explicit Polynomial Curve Estimation
-## By Jiaqi Tang
-## https://ebooks.iospress.nl/doi/10.3233/FAIA230533
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -18,17 +11,17 @@ from einops import rearrange
 ##---------- Explicit Polynomial Curve Estimation (EPCE) -----------------
 class Curve_Estimation(nn.Module):
 
-    def __init__(self):
+    def _init_(self):
         """
-        The `forward` function takes an input `x` and a parameter `a`, passes `x` through a neural
-        network, and then uses the parameters `r0` to `r8` to perform a curve estimation on `x` to
+        The forward function takes an input x and a parameter a, passes x through a neural
+        network, and then uses the parameters r0 to r8 to perform a curve estimation on x to
         enhance the image.
         """
 
-        # The above code is initializing an instance of the `Curve_Estimation` class and calling its
-        # superclass's `__init__` method. It then creates an instance of the `LPE` class and assigns
-        # it to the `network` attribute of the `Curve_Estimation` instance.
-        super(Curve_Estimation, self).__init__()
+        # The above code is initializing an instance of the Curve_Estimation class and calling its
+        # superclass's __init__ method. It then creates an instance of the LPE class and assigns
+        # it to the network attribute of the Curve_Estimation instance.
+        super(Curve_Estimation, self)._init_()
 
         self.network = LPE()
 
@@ -65,10 +58,10 @@ class Curve_Estimation(nn.Module):
 
 def to_3d(x):
     """
-    The function `to_3d` rearranges the dimensions of a tensor from 2D to 3D.
+    The function to_3d rearranges the dimensions of a tensor from 2D to 3D.
     
     :param x: The input tensor with shape (b, c, h, w), where:
-    :return: the input tensor `x` rearranged in a 3D format.
+    :return: the input tensor x rearranged in a 3D format.
     """
     return rearrange(x, 'b c h w -> b (h w) c')
 
@@ -77,18 +70,18 @@ def to_4d(x,h,w):
 
 # The BiasFree_LayerNorm class implements a bias-free layer normalization operation in PyTorch.
 class BiasFree_LayerNorm(nn.Module):
-    def __init__(self, normalized_shape):
+    def _init_(self, normalized_shape):
         """
-        The function initializes a class called `BiasFree_LayerNorm` and sets the weight and normalized
+        The function initializes a class called BiasFree_LayerNorm and sets the weight and normalized
         shape attributes.
         
-        :param normalized_shape: The `normalized_shape` parameter is the shape of the input tensor that
+        :param normalized_shape: The normalized_shape parameter is the shape of the input tensor that
         will be normalized. It can be either an integer or a tuple of integers representing the
         dimensions of the input tensor
         """
-       # The above code is defining a class called `BiasFree_LayerNorm` in Python.
+       # The above code is defining a class called BiasFree_LayerNorm in Python.
         
-        super(BiasFree_LayerNorm, self).__init__()
+        super(BiasFree_LayerNorm, self)._init_()
         if isinstance(normalized_shape, numbers.Integral):
             normalized_shape = (normalized_shape,)
         normalized_shape = torch.Size(normalized_shape)
@@ -103,8 +96,8 @@ class BiasFree_LayerNorm(nn.Module):
         return x / torch.sqrt(sigma+1e-5) * self.weight
 
 class WithBias_LayerNorm(nn.Module):
-    def __init__(self, normalized_shape):
-        super(WithBias_LayerNorm, self).__init__()
+    def _init_(self, normalized_shape):
+        super(WithBias_LayerNorm, self)._init_()
         if isinstance(normalized_shape, numbers.Integral):
             normalized_shape = (normalized_shape,)
         normalized_shape = torch.Size(normalized_shape)
@@ -121,8 +114,8 @@ class WithBias_LayerNorm(nn.Module):
         return (x - mu) / torch.sqrt(sigma+1e-5) * self.weight + self.bias
 
 class LayerNorm(nn.Module):
-    def __init__(self, dim, LayerNorm_type):
-        super(LayerNorm, self).__init__()
+    def _init_(self, dim, LayerNorm_type):
+        super(LayerNorm, self)._init_()
         if LayerNorm_type =='BiasFree':
             self.body = BiasFree_LayerNorm(dim)
         else:
@@ -135,8 +128,8 @@ class LayerNorm(nn.Module):
 ##########################################################################
 ## ---------- U-shape Local Forward Block (ULFB) -------------------------
 class ULFB(nn.Module):
-    def __init__(self, dim, ffn_expansion_factor, bias):
-        super(ULFB, self).__init__()
+    def _init_(self, dim, ffn_expansion_factor, bias):
+        super(ULFB, self)._init_()
 
         hidden_features = int(dim*ffn_expansion_factor)
 
@@ -174,8 +167,8 @@ class ULFB(nn.Module):
 ##########################################################################
 ## --Multi-DConv Head Transposed Self-Attention (MDTA) (from: Restormer)--
 class Attention(nn.Module):
-    def __init__(self, dim, num_heads, bias):
-        super(Attention, self).__init__()
+    def _init_(self, dim, num_heads, bias):
+        super(Attention, self)._init_()
         self.num_heads = num_heads
         self.temperature = nn.Parameter(torch.ones(num_heads, 1, 1))
 
@@ -209,8 +202,8 @@ class Attention(nn.Module):
         return out
 
 class TransformerBlock(nn.Module):
-    def __init__(self, dim, num_heads, ffn_expansion_factor, bias, LayerNorm_type):
-        super(TransformerBlock, self).__init__()
+    def _init_(self, dim, num_heads, ffn_expansion_factor, bias, LayerNorm_type):
+        super(TransformerBlock, self)._init_()
 
         self.norm1 = LayerNorm(dim, LayerNorm_type)
         self.attn = Attention(dim, num_heads, bias)
@@ -226,8 +219,8 @@ class TransformerBlock(nn.Module):
 ##########################################################################
 ## ----------------Overlapped image patch embedding with 3x3 Conv --------
 class OverlapPatchEmbed(nn.Module):
-    def __init__(self, in_c=3, embed_dim=48, bias=False):
-        super(OverlapPatchEmbed, self).__init__()
+    def _init_(self, in_c=3, embed_dim=48, bias=False):
+        super(OverlapPatchEmbed, self)._init_()
 
         self.proj = nn.Conv2d(in_c, embed_dim, kernel_size=3, stride=1, padding=1, bias=bias)
 
@@ -240,25 +233,25 @@ class OverlapPatchEmbed(nn.Module):
 ## ------------------ Resizing modules -----------------------------------
 class Downsample(nn.Module):
     """
-    The `Downsample` class is a neural network module that performs downsampling on an input
+    The Downsample class is a neural network module that performs downsampling on an input
     image using convolutional layers.
     
-    :param n_feat: The parameter `n_feat` represents the number of input features or channels in
-    the convolutional layers of the `Downsample` module
+    :param n_feat: The parameter n_feat represents the number of input features or channels in
+    the convolutional layers of the Downsample module
     """
-    def __init__(self, n_feat):
-        super(Downsample, self).__init__()
+    def _init_(self, n_feat):
+        super(Downsample, self)._init_()
 
         self.body = nn.Sequential(nn.Conv2d(n_feat, n_feat, kernel_size=3, stride=1, padding=1, bias=False),
                                   nn.Conv2d(n_feat, n_feat*4, kernel_size=3, stride=2, padding=1, bias=False))
                                 # The above code is written in Python and it appears to be using a
-                                # neural network module called `nn`. It is likely part of a larger
+                                # neural network module called nn. It is likely part of a larger
                                 # codebase or script. The specific function being used is
-                                # `PixelUnShuffle`, which suggests that it is performing some kind of
-                                # operation on pixels or images. The number `2` passed as an argument
+                                # PixelUnShuffle, which suggests that it is performing some kind of
+                                # operation on pixels or images. The number 2 passed as an argument
                                 # to the function could indicate that the function is unshuffling
                                 # pixels by a factor of 2. However, without more context or
-                                # information about the `nn` module and its specific implementation,
+                                # information about the nn module and its specific implementation,
                                 # it is difficult to determine the exact purpose or outcome of this
                                 # code
                                 #   nn.PixelUnShuffle(2))
@@ -267,8 +260,8 @@ class Downsample(nn.Module):
         return self.body(x)
 
 class Upsample(nn.Module):
-    def __init__(self, n_feat):
-        super(Upsample, self).__init__()
+    def _init_(self, n_feat):
+        super(Upsample, self)._init_()
 
         self.body = nn.Sequential(nn.Conv2d(n_feat, n_feat*4, kernel_size=3, stride=1, padding=1, bias=False),
                                   nn.PixelShuffle(2))
@@ -279,7 +272,7 @@ class Upsample(nn.Module):
 ##########################################################################
 ##---------- Pyramid-Path Vision Transformer (PPViT) ---------------------
 class PPVisionTransformer(nn.Module):
-    def __init__(self, 
+    def _init_(self, 
         inp_channels=3, 
         out_channels=27,
         dim = 48,
@@ -291,7 +284,7 @@ class PPVisionTransformer(nn.Module):
         LayerNorm_type = 'WithBias',   ## Other option 'BiasFree'
         dual_pixel_task = False        ## True for dual-pixel defocus deblurring only. Also set inp_channels=6
     ):
-        super(PPVisionTransformer, self).__init__()
+        super(PPVisionTransformer, self)._init_()
 
         self.patch_embed_1 = OverlapPatchEmbed(inp_channels, dim*2)
 
@@ -406,7 +399,7 @@ class PPVisionTransformer(nn.Module):
 ##########################################################################
 ##---------- Learnable Pixel-Wise Elements (LPE) -------------------------
 class LPE(nn.Module):
-    def __init__(self, 
+    def _init_(self, 
         inp_channels=3, 
         out_channels=27,
         dim = 48,
@@ -417,7 +410,7 @@ class LPE(nn.Module):
         bias = False,
         LayerNorm_type = 'WithBias',   ## Other option 'BiasFree'
     ):
-        super(LPE, self).__init__()
+        super(LPE, self)._init_()
 
         self.patch_embed_1 = OverlapPatchEmbed(inp_channels, dim)
 
@@ -461,8 +454,8 @@ class LPE(nn.Module):
         return image
 
 class Vgg19(torch.nn.Module):
-    def __init__(self, requires_grad=False):
-        super(Vgg19, self).__init__()
+    def _init_(self, requires_grad=False):
+        super(Vgg19, self)._init_()
         vgg_pretrained_features = models.vgg19(pretrained=True).features
         self.slice1 = torch.nn.Sequential()
         self.slice2 = torch.nn.Sequential()
@@ -494,19 +487,17 @@ class Vgg19(torch.nn.Module):
 
 
 class VGGLoss(nn.Module):
-    def __init__(self):
-        super(VGGLoss, self).__init__()
+    def _init_(self):
+        super(VGGLoss, self)._init_()
         self.vgg = Vgg19().cuda()
         self.criterion = nn.L1Loss()
         self.weights = [1.0 / 32, 1.0 / 16, 1.0 / 8, 1.0 / 4, 1.0]
-        # Finding the type of each element in the list
-        for element in self.weights:
-            element_type = type(element)
-            print("Type:", element_type, "| Value:", element)
 
     def forward(self, x, y):
         x_vgg, y_vgg = self.vgg(x), self.vgg(y)
         loss = 0
         for i in range(len(x_vgg)):
             loss += self.weights[i] * self.criterion(x_vgg[i], y_vgg[i].detach())
+        
         return loss
+

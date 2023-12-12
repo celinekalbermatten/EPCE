@@ -15,5 +15,6 @@ cd /home/ckalberm/EPCE
 echo SUCCESSFULLY CHANGED LOCATION
 
 python3 -u epce_train_celine.py 
+#python3 -u adam.py 
 
 echo FINISHED at `date`

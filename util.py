@@ -115,3 +115,5 @@ def plot_losses(training_losses, validation_losses, num_epochs, path):
     plt.title(os.path.basename(os.path.normpath(path)))
     plt.legend()
     plt.savefig(path)
+
+

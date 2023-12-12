@@ -2,6 +2,7 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader
 import EPCE
+#from EPCE import VGGLoss
 import glob
 from torchvision import transforms
 from torch.utils.data import DataLoader, Dataset
@@ -100,7 +101,9 @@ print("Validation samples: ", len(val_data_loader))
 # ========================================
 
 # curve estimation model
+#model = EPCE.PPVisionTransformer().to(dtype=torch.half)
 model = EPCE.PPVisionTransformer()
+
 
 # ========================================
 # Initialization of losses and optimizer
@@ -122,6 +125,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
 
 print(opt)
 
+"""
 if opt.continue_train:
     try:
         start_epoch, model = load_checkpoint(model, opt.ckpt_path)
@@ -139,6 +143,7 @@ else:
 
 if opt.print_model:
     print(model)
+"""
 
 """
 # ========================================
@@ -196,6 +201,9 @@ print(f"# of epochs: {num_epochs}")
 losses_train = []
 losses_validation = []
 
+# define the batch size
+batch_size = opt.batch_size
+
 for epoch in range(opt.epochs):
     print(f"-------------- Epoch # {epoch} --------------")
 
@@ -209,17 +217,31 @@ for epoch in range(opt.epochs):
     losses_epoch = []
 
     # training loop
-    for batch in tqdm(train_data_loader):
+    """for batch in tqdm(train_data_loader):
         # move the batch to the device
         optimizer.zero_grad()
 
         # get the LDR images
         input = batch['ldr_image']
         input = input.to(device)
+        input = input.to(dtype=torch.half)
 
         # get the HDR images
         output_true = batch['hdr_image']
         output_true = output_true.to(device)
+        output_true = output_true.to(dtype=torch.half)"""
+
+    for batch, data in enumerate(train_data_loader):
+        # get the LDR images
+        input = data["ldr_image"]
+        input = input.to(device)
+        #input = input.to(dtype=torch.half)
+        # get the HDR images
+        output_true = data["hdr_image"]
+        output_true = output_true.to(device)
+        #output_true = output_true.to(dtype=torch.half)
+
+        print('batch size:', opt.batch_size)
 
         # forward pass through the model
         output = model(input)
@@ -228,9 +250,17 @@ for epoch in range(opt.epochs):
         vgg_loss = 0
 
         # compute the loss for the generated outputs
-        for i in range(len(output)):
+        """for i in range(len(output)):
             l1_loss += l1(output[i], output_true[i])
-            vgg_loss += perceptual_loss(output[i], output_true[i])
+            vgg_loss += perceptual_loss(output[i], output_true[i])"""
+
+        for image in output:
+            # add a dimension for the batch size
+            image = image.unsqueeze(0)
+            # expand the batch dimension to the desired batch size
+            image = image.expand(batch_size, -1, -1, -1)
+            l1_loss += l1(image, output_true)
+            vgg_loss += perceptual_loss(image, output_true)
 
         # average over n iterations
         l1_loss /= len(output)
@@ -297,6 +327,10 @@ for epoch in range(opt.epochs):
             vgg_loss_val = 0
 
             for image_val in output_val:
+                # add a dimension for the batch size
+                image_val = image_val.unsqueeze(0)
+                # expand the batch dimension to the desired batch size
+                image_val = image_val.expand(batch_size, -1, -1, -1)
                 l1_loss_val += l1(image_val, ground_truth_val)
                 vgg_loss_val += perceptual_loss(image_val, ground_truth_val)
 
@@ -332,13 +366,13 @@ for epoch in range(opt.epochs):
     print("End of epoch {}. Time taken: {} s.".format(epoch, int(time_taken)))
 
     # save the checkpoints for each epoch
-    save_checkpoint(epoch, model)
+    #save_checkpoint(epoch, model)
 
 # ========================================
 # Save the model
 # ========================================
 
-torch.save(model, 'epce.pth')
+#torch.save(model, 'epce.pth')
 
 # ========================================
 # Print the results
