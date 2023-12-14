@@ -10,6 +10,10 @@ from options import Options
 import EPCE
 from util import make_required_directories, mu_tonemap, save_hdr_image, save_ldr_image
 
+# ======================================
+# Initial training options 
+# ======================================
+
 # initialise options
 opt = Options().parse()
 opt.log_scores = True
@@ -32,7 +36,7 @@ print("Testing samples: ", len(dataset))
 # loading & GPU configuration
 # ========================================
 
-# initialize FHDR model with specified iterations
+# initialize EPCE model
 model = EPCE.PPVisionTransformer()
 #model = FHDR(iteration_count=opt.iter)
 

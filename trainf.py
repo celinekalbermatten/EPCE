@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 from torch.utils.data import DataLoader, Dataset
-import EPCE
+import EPCE_adam
 import glob
 from torchvision import transforms
 import numpy as np
@@ -12,7 +12,7 @@ from tqdm import tqdm
 import os
 import time
 
-from data_loader import HDRDataset
+from data_loader import HDRDataset, decrease_data_size
 from model import FHDR
 import potions
 from util import (
@@ -67,9 +67,13 @@ for gpu in gpu_info:
     print(f"   Free Memory : {gpu['memory_free'] / 1024**2} MB")
     print("-" * 20)
 
+# ======================================
+# Initial training options 
+# and folder creation
+# ======================================
 
-
-pathtocheckp = 'foldercheckp'
+# create the name of the folder to save the model later
+pathtocheckp = './foldercheckp'
 
 # initalize the training options
 opt = potions.Options().parse()
@@ -81,14 +85,14 @@ opt = potions.Options().parse()
 dataset = HDRDataset(mode="train", opt=opt)
 
 # decrease the size of the data
-dataset = decrease_data_size(dataset)
+#dataset = decrease_data_size(dataset)
 
 # split dataset into training and validation sets
 train_dataset, val_dataset = train_test_split(dataset, test_size=0.2, random_state=42)
 
 # set the batch size
-opt.batch_size = 8
-batch_size = 8
+opt.batch_size = 1
+batch_size = 1
 
 # create separate data loaders for training and validation
 train_data_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
@@ -103,7 +107,9 @@ print("Validation samples: ", len(val_data_loader))
 # ========================================
 
 # curve estimation model
-model = EPCE.PPVisionTransformer()
+model = EPCE_adam.PPVisionTransformer()
+# decrease the size of the model from torch.32 to torch.16
+model = model.half()
 
 # ========================================
 # Initialization of losses and optimizer
@@ -111,7 +117,7 @@ model = EPCE.PPVisionTransformer()
 
 # define the loss function
 l1 = torch.nn.L1Loss()
-perceptual_loss = EPCE.VGGLoss()
+perceptual_loss = EPCE_adam.VGGLoss()
 
 # define the optimizer
 optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
@@ -167,10 +173,12 @@ for epoch in range(num_epochs):
         # get the LDR images
         input = batch['ldr_image']
         input = input.to(device)
+        input = input.to(dtype=torch.half)
 
         # get the HDR images
         output_true = batch['hdr_image']
         output_true = output_true.to(device)
+        output_true = output_true.to(dtype=torch.half)
 
         # forward pass through the model
         output = model(input)
@@ -292,6 +300,9 @@ for epoch in range(num_epochs):
       model_save_path = pathtochekp + '/model_odt_{}.pth'.format(epoch)
       torch.save(model.state_dict(), model_save_path)
       print("Model saved to {}".format(model_save_path))
+    
+    # save the checkpoints for each epoch
+    save_checkpoint(epoch, model)
 
 # ========================================
 # Print and plot the results

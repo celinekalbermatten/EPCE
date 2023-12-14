@@ -16,6 +16,6 @@ echo SUCCESSFULLY CHANGED LOCATION
 
 #python3 -u epce_train_celine.py 
 #python3 -u adam.py 
-python3 -u ftrain.py
+python3 -u trainf.py
 
 echo FINISHED at `date`

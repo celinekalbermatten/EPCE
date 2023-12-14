@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import os
 import time
 
-from data_loader import HDRDataset
+from data_loader import HDRDataset, decrease_data_size
 from model import FHDR
 import potions
 from util import (
@@ -76,6 +76,9 @@ for gpu in gpu_info:
 #if torch.cuda.is_available():
     #torch.cuda.set_device(1)
 
+# ======================================
+# Initial training options 
+# ======================================
 
 # initalize the training options
 opt = potions.Options().parse()
@@ -87,6 +90,7 @@ batch_size = 1
 # ======================================
 
 dataset = HDRDataset(mode="train", opt=opt)
+dataset = decrease_data_size(dataset)
 
 # split dataset into training and validation sets
 train_dataset, val_dataset = train_test_split(dataset, test_size=0.2, random_state=42)
@@ -108,6 +112,7 @@ print("Validation samples: ", len(val_data_loader))
 model = EPCE.PPVisionTransformer()
 #for name, param in model.named_parameters():
     #print(f"Parameter initial: {name}, Dtype: {param.dtype}")
+# decrease the size of the model from torch.32 to torch.16
 model = model.half()
 #for name, param in model.named_parameters():
     #print(f"Parameter after half transformation: {name}, Dtype: {param.dtype}")
@@ -275,6 +280,7 @@ for epoch in range(opt.epochs):
             image = image.unsqueeze(0)
             # expand the batch dimension to the desired batch size
             image = image.expand(batch_size, -1, -1, -1)
+            image = image.to(dtype=torch.half)
             l1_loss += l1(image, output_true)
             vgg_loss += perceptual_loss(image, output_true)
 
