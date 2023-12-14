@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 from torch.utils.data import DataLoader
-import EPCE
+import EPCE_ok
 #from EPCE import VGGLoss
 import glob
 from torchvision import transforms
@@ -109,7 +109,7 @@ print("Validation samples: ", len(val_data_loader))
 
 # curve estimation model
 #model = EPCE.PPVisionTransformer().to(dtype=torch.half)
-model = EPCE.PPVisionTransformer()
+model = EPCE_ok.PPVisionTransformer()
 #for name, param in model.named_parameters():
     #print(f"Parameter initial: {name}, Dtype: {param.dtype}")
 # decrease the size of the model from torch.32 to torch.16
@@ -126,7 +126,7 @@ model = model.half()
 l1 = torch.nn.L1Loss()
 # TODO: could be 
 #perceptual_loss = VGGLoss()
-perceptual_loss = EPCE.VGGLoss()
+perceptual_loss = EPCE_ok.VGGLoss()
 # define the optimizer
 # TODO: could be
 #optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr, betas=(0.9, 0.999))
@@ -281,6 +281,7 @@ for epoch in range(opt.epochs):
             # expand the batch dimension to the desired batch size
             image = image.expand(batch_size, -1, -1, -1)
             image = image.to(dtype=torch.half)
+            output_true = output_true.to(dtype=torch.half)
             l1_loss += l1(image, output_true)
             vgg_loss += perceptual_loss(image, output_true)
 

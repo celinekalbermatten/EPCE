@@ -120,6 +120,7 @@ l1 = torch.nn.L1Loss()
 perceptual_loss = EPCE_adam.VGGLoss()
 
 # define the optimizer
+print('model parameters', model.parameters)
 optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
 
 # ========================================

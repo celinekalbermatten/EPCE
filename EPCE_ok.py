@@ -498,11 +498,9 @@ class VGGLoss(nn.Module):
         super(VGGLoss, self).__init__()
         self.vgg = Vgg19().cuda()
         self.criterion = nn.L1Loss()
-        self.weights = [1.0 / 32, 1.0 / 16, 1.0 / 8, 1.0 / 4, 1.0]
-        # Finding the type of each element in the list
-        for element in self.weights:
-            element_type = type(element)
-            print("Type:", element_type, "| Value:", element)
+        weights = [1.0 / 32, 1.0 / 16, 1.0 / 8, 1.0 / 4, 1.0]
+        weights_half = [torch.tensor(w, dtype=torch.float16) for w in weights]
+        self.weights = weights_half
 
     def forward(self, x, y):
         x_vgg, y_vgg = self.vgg(x), self.vgg(y)
