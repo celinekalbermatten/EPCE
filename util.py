@@ -82,8 +82,14 @@ def save_ldr_image(img_tensor, batch, path):
 def save_checkpoint(epoch, model):
     """ Saving model checkpoint """
 
-    checkpoint_path = os.path.join("./checkpoints", "epoch_" + str(epoch) + ".ckpt")
-    latest_path = os.path.join("./checkpoints", "latest.ckpt")
+    checkpoint_dir = "./checkpoints"
+
+    # Check if the directory exists, if not, create it
+    if not os.path.exists(checkpoint_dir):
+        os.makedirs(checkpoint_dir)
+
+    checkpoint_path = os.path.join(checkpoint_dir, "epoch_" + str(epoch) + ".ckpt")
+    latest_path = os.path.join(checkpoint_dir, "latest.ckpt")
     torch.save(model.state_dict(), checkpoint_path)
     torch.save(model.state_dict(), latest_path)
     np.savetxt("./checkpoints/state.txt", [epoch + 1], fmt="%d")
@@ -105,7 +111,7 @@ def update_lr(optimizer, epoch, opt):
 
 def plot_losses(training_losses, validation_losses, num_epochs, path):
     """
-    Plot the training losses in function of the number of epochs.
+    Plot the training and validation losses in function of the number of epochs.
     """
     plt.figure()
     plt.plot(np.linspace(1, num_epochs, num=num_epochs), training_losses, label="training")
@@ -115,5 +121,13 @@ def plot_losses(training_losses, validation_losses, num_epochs, path):
     plt.title(os.path.basename(os.path.normpath(path)))
     plt.legend()
     plt.savefig(path)
+
+
+def print_gpu_info():
+    try:
+        output = subprocess.check_output(["nvidia-smi"])
+        print(output.decode("utf-8"))  # Print the GPU information
+    except subprocess.CalledProcessError as e:
+        print("Error executing nvidia-smi:", e)
 
 

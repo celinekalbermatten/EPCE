@@ -25,7 +25,8 @@ from util import (
     save_hdr_image,
     save_ldr_image,
     update_lr,
-    plot_losses
+    plot_losses,
+    print_gpu_info
 
 )
 
@@ -78,6 +79,8 @@ for gpu in gpu_info:
 
 # initalize the training options
 opt = potions.Options().parse()
+batch_size = 1
+#batch_size = opt.batch_size
 
 # ======================================
 # Load the data
@@ -89,8 +92,8 @@ dataset = HDRDataset(mode="train", opt=opt)
 train_dataset, val_dataset = train_test_split(dataset, test_size=0.2, random_state=42)
 
 # create separate data loaders for training and validation
-train_data_loader = DataLoader(train_dataset, batch_size=opt.batch_size, shuffle=True)
-val_data_loader = DataLoader(val_dataset, batch_size=opt.batch_size, shuffle=False)
+train_data_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+val_data_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 
 # print the number of training and validation samples
 print("Training samples: ", len(train_data_loader))
@@ -103,6 +106,11 @@ print("Validation samples: ", len(val_data_loader))
 # curve estimation model
 #model = EPCE.PPVisionTransformer().to(dtype=torch.half)
 model = EPCE.PPVisionTransformer()
+#for name, param in model.named_parameters():
+    #print(f"Parameter initial: {name}, Dtype: {param.dtype}")
+model = model.half()
+#for name, param in model.named_parameters():
+    #print(f"Parameter after half transformation: {name}, Dtype: {param.dtype}")
 
 
 # ========================================
@@ -201,8 +209,6 @@ print(f"# of epochs: {num_epochs}")
 losses_train = []
 losses_validation = []
 
-# define the batch size
-batch_size = opt.batch_size
 
 for epoch in range(opt.epochs):
     print(f"-------------- Epoch # {epoch} --------------")
@@ -232,19 +238,29 @@ for epoch in range(opt.epochs):
         output_true = output_true.to(dtype=torch.half)"""
 
     for batch, data in enumerate(train_data_loader):
+        # move the batch to the device
+        optimizer.zero_grad()
+
         # get the LDR images
         input = data["ldr_image"]
         input = input.to(device)
-        #input = input.to(dtype=torch.half)
+        print('initial input type:', input.dtype)
+        input = input.to(dtype=torch.half)
+        print('after transformation input type:', input.dtype)
         # get the HDR images
         output_true = data["hdr_image"]
         output_true = output_true.to(device)
-        #output_true = output_true.to(dtype=torch.half)
+        output_true = output_true.to(dtype=torch.half)
 
-        print('batch size:', opt.batch_size)
+        #print('batch size:', opt.batch_size)
+        print('batch size:', batch_size)
 
         # forward pass through the model
+        print('cuda before')
+        print_gpu_info
         output = model(input)
+        print('cuda after')
+        print_gpu_info
 
         l1_loss = 0
         vgg_loss = 0
@@ -315,10 +331,12 @@ for epoch in range(opt.epochs):
             # get the LDR images
             input_val = val_data['ldr_image']
             input_val = input_val.to(device)
+            input_val = input_val.to(dtype=torch.half)
 
             # get the HDR images
             ground_truth_val = val_data['hdr_image']
             ground_truth_val = ground_truth_val.to(device)
+            ground_truth_val = ground_truth_val.to(dtype=torch.half)
 
             output_val = model(input_val)
 
@@ -366,7 +384,7 @@ for epoch in range(opt.epochs):
     print("End of epoch {}. Time taken: {} s.".format(epoch, int(time_taken)))
 
     # save the checkpoints for each epoch
-    #save_checkpoint(epoch, model)
+    save_checkpoint(epoch, model)
 
 # ========================================
 # Save the model
@@ -375,7 +393,7 @@ for epoch in range(opt.epochs):
 #torch.save(model, 'epce.pth')
 
 # ========================================
-# Print the results
+# Print and plot the results
 # ========================================
 
 print("Training complete!")
@@ -383,4 +401,10 @@ print("Training complete!")
 print(f"Training losses: {losses_train}")
 print(f"Validation losses: {losses_validation}")
 
-plot_losses(losses_train, losses_validation, num_epochs, f"plots/_loss_{num_epochs}_epochs")
+# create the plot of the losses
+directory_plots = "./plots"
+# create the directory if it doesn't exist
+if not os.path.exists(directory_plots):
+    os.makedirs(directory_plots)
+
+plot_losses(losses_train, losses_validation, num_epochs, f"{directory_plots}/_loss_{num_epochs}_epochs")

@@ -102,6 +102,9 @@ with torch.no_grad():
 
         # generate the output from the model
         output = model(input)
+        print('output:', output.size())
+        output = output.squeeze(dim=0)
+        print('output after squeeze:', output.size())
 
         # get the final output from the model
         output = output[-1]
