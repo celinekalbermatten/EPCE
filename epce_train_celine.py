@@ -338,6 +338,7 @@ for epoch in range(opt.epochs):
             ground_truth_val = ground_truth_val.to(device)
             ground_truth_val = ground_truth_val.to(dtype=torch.half)
 
+            # forward pass through the model
             output_val = model(input_val)
 
             # calculate the validation loss
@@ -378,17 +379,19 @@ for epoch in range(opt.epochs):
     # set model back to training mode
     model.train()
 
+    # compute the time taken per epoch
     epoch_finish = time.time()
     time_taken = (epoch_finish - epoch_start)
 
     print("End of epoch {}. Time taken: {} s.".format(epoch, int(time_taken)))
 
-    # save the checkpoints for each epoch
-    save_checkpoint(epoch, model)
-
 # ========================================
 # Save the model
 # ========================================
+
+    # save the checkpoints for each epoch
+    save_checkpoint(epoch, model)
+
 
 #torch.save(model, 'epce.pth')
 

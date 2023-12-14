@@ -114,22 +114,22 @@ with torch.no_grad():
         save_hdr_image(
                 img_tensor=outputs,
                 batch=0,
-                path="/content/drive/MyDrive/epce-hdr/res/genot"+str(n)+".hdr".format(
+                path="./test_results/generated_hdr_b_{}_{}.hdr".format(
                     i
                 ),
         )
         save_hdr_image(
                 img_tensor=targets,
                 batch=0,
-                path="/content/drive/MyDrive/epce-hdr/res/realot"+str(n)+".hdr".format(
+                path="./test_results/gt_hdr_b_{}_{}.hdr".format(
                     i
                 ),
             )
         # Load images
-        image1 = cv2.imread("/content/drive/MyDrive/epce-hdr/res/genot"+str(n)+".hdr".format(
+        image1 = cv2.imread("./test_results/generated_hdr_b_{}_{}.hdr".format(
                     i
                 ))
-        image2 = cv2.imread("/content/drive/MyDrive/epce-hdr/res/realot"+str(n)+".hdr".format(
+        image2 = cv2.imread("./test_results/gt_hdr_b_{}_{}.hdr".format(
                     i
                 ))
 

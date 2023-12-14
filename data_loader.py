@@ -5,6 +5,7 @@ import torch
 import torchvision.transforms as transforms
 from PIL import Image
 from torch.utils.data import Dataset
+import random
 
 
 class HDRDataset(Dataset):
@@ -19,9 +20,9 @@ class HDRDataset(Dataset):
 
         # determine the dataset based on the mode
         if mode == "train":
-            self.dataset_path = os.path.join(f"./dataset_old/clear/train")
+            self.dataset_path = os.path.join(f"./dataset_full_images/train")
         else:
-            self.dataset_path = os.path.join(f"./dataset_old/clear/test")
+            self.dataset_path = os.path.join(f"./dataset_full_images/test")
 
         # define the paths for the LDR and HDR images
         self.ldr_data_path = os.path.join(self.dataset_path, "LDR")
@@ -67,3 +68,33 @@ class HDRDataset(Dataset):
         Return the number of LDR images that are taken in one batch.
         """
         return len(self.ldr_image_names) // self.batch_size * self.batch_size
+    
+
+    def decrease_data_size(dataset):
+        # List for the new dictionaries 
+        new_data = []  
+
+        for m in dataset:
+            ldr_image = m['ldr_image']
+            hdr_image = m['hdr_image']
+
+            _, height, width = ldr_image.shape
+
+            # Diviser la hauteur et la largeur en 4 segments égaux
+            segment_height = height // 4
+            segment_width = width // 4
+
+            # Création des sous-images (16 au total) et ajout dans la nouvelle liste
+            for i in range(4):
+                for j in range(4):
+                    h_start = i * segment_height
+                    w_start = j * segment_width
+
+                    new_dict = {
+                        'ldr_image': ldr_image[ :, h_start:h_start + segment_height, w_start:w_start + segment_width],
+                        'hdr_image': hdr_image[ :, h_start:h_start + segment_height, w_start:w_start + segment_width]
+                    }
+                    new_data.append(new_dict)
+
+        random.seed(1)
+        random.shuffle(new_data)
