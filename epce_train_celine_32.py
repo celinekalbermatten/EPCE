@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 from torch.utils.data import DataLoader
-import EPCE_ok
+import EPCE_ok_32
 #from EPCE import VGGLoss
 import glob
 from torchvision import transforms
@@ -90,7 +90,7 @@ batch_size = 1
 # ======================================
 
 dataset = HDRDataset(mode="train", opt=opt)
-dataset = decrease_data_size(dataset)
+#dataset = decrease_data_size(dataset)
 
 # split dataset into training and validation sets
 train_dataset, val_dataset = train_test_split(dataset, test_size=0.2, random_state=42)
@@ -109,11 +109,11 @@ print("Validation samples: ", len(val_data_loader))
 
 # curve estimation model
 #model = EPCE.PPVisionTransformer().to(dtype=torch.half)
-model = EPCE_ok.PPVisionTransformer()
+model = EPCE_ok_32.PPVisionTransformer()
 #for name, param in model.named_parameters():
     #print(f"Parameter initial: {name}, Dtype: {param.dtype}")
 # decrease the size of the model from torch.32 to torch.16
-model = model.half()
+#model = model.half()
 #for name, param in model.named_parameters():
     #print(f"Parameter after half transformation: {name}, Dtype: {param.dtype}")
 
@@ -126,7 +126,7 @@ model = model.half()
 l1 = torch.nn.L1Loss()
 # TODO: could be 
 #perceptual_loss = VGGLoss()
-perceptual_loss = EPCE_ok.VGGLoss()
+perceptual_loss = EPCE_ok_32.VGGLoss()
 # define the optimizer
 # TODO: could be
 #optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr, betas=(0.9, 0.999))
@@ -249,13 +249,13 @@ for epoch in range(opt.epochs):
         # get the LDR images
         input = data["ldr_image"]
         input = input.to(device)
-        print('initial input type:', input.dtype)
-        input = input.to(dtype=torch.half)
-        print('after transformation input type:', input.dtype)
+        #print('initial input type:', input.dtype)
+        #input = input.to(dtype=torch.half)
+        #print('after transformation input type:', input.dtype)
         # get the HDR images
         output_true = data["hdr_image"]
         output_true = output_true.to(device)
-        output_true = output_true.to(dtype=torch.half)
+        #output_true = output_true.to(dtype=torch.half)
 
         #print('batch size:', opt.batch_size)
         print('batch size:', batch_size)
@@ -280,8 +280,8 @@ for epoch in range(opt.epochs):
             image = image.unsqueeze(0)
             # expand the batch dimension to the desired batch size
             image = image.expand(batch_size, -1, -1, -1)
-            image = image.to(dtype=torch.half)
-            output_true = output_true.to(dtype=torch.half)
+            #image = image.to(dtype=torch.half)
+            #output_true = output_true.to(dtype=torch.half)
             l1_loss += l1(image, output_true)
             vgg_loss += perceptual_loss(image, output_true)
 
@@ -299,8 +299,8 @@ for epoch in range(opt.epochs):
         losses_epoch.append(loss.item())
 
         # backpropagate and optimization 
-        loss = loss.to('cpu')
-        print('loss type before backward prob:', input.dtype)
+        #loss = loss.to('cpu')
+        #print('loss type before backward prob:', input.dtype)
         loss.backward()
         optimizer.step()
 
@@ -340,12 +340,12 @@ for epoch in range(opt.epochs):
             # get the LDR images
             input_val = val_data['ldr_image']
             input_val = input_val.to(device)
-            input_val = input_val.to(dtype=torch.half)
+            #input_val = input_val.to(dtype=torch.half)
 
             # get the HDR images
             ground_truth_val = val_data['hdr_image']
             ground_truth_val = ground_truth_val.to(device)
-            ground_truth_val = ground_truth_val.to(dtype=torch.half)
+            #ground_truth_val = ground_truth_val.to(dtype=torch.half)
 
             # forward pass through the model
             output_val = model(input_val)

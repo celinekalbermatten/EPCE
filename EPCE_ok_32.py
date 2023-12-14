@@ -461,8 +461,8 @@ class LPE(nn.Module):
         return image
 
 class Vgg19(torch.nn.Module):
-    def __init__(self, requires_grad=False):
-        super(Vgg19, self).__init__()
+    def _init_(self, requires_grad=False):
+        super(Vgg19, self)._init_()
         vgg_pretrained_features = models.vgg19(pretrained=True).features
         self.slice1 = torch.nn.Sequential()
         self.slice2 = torch.nn.Sequential()
@@ -482,9 +482,6 @@ class Vgg19(torch.nn.Module):
         if not requires_grad:
             for param in self.parameters():
                 param.requires_grad = False
-        
-        # convert parameters to half-precision
-        self.to(torch.half)
 
     def forward(self, X):
         h_relu1 = self.slice1(X)
@@ -501,20 +498,12 @@ class VGGLoss(nn.Module):
         super(VGGLoss, self).__init__()
         self.vgg = Vgg19().cuda()
         self.criterion = nn.L1Loss()
-        weights = [1.0 / 32, 1.0 / 16, 1.0 / 8, 1.0 / 4, 1.0]
-        self.weights = [torch.tensor(w, dtype=torch.float16) for w in weights]
-        #weights = [1.0 / 32, 1.0 / 16, 1.0 / 8, 1.0 / 4, 1.0]
-        #weights_half = [torch.tensor(w, dtype=torch.float16) for w in weights]
-        #self.weights = weights_half
+        self.weights = [1.0 / 32, 1.0 / 16, 1.0 / 8, 1.0 / 4, 1.0]
 
     def forward(self, x, y):
         x_vgg, y_vgg = self.vgg(x), self.vgg(y)
         loss = 0
         for i in range(len(x_vgg)):
-            loss = torch.tensor(0.0, dtype=torch.float32).half().cuda()
-            #loss += self.weights[i] * self.criterion(x_vgg[i], y_vgg[i].detach())
-            for i in range(len(x_vgg)):
-                x_loss = self.criterion(x_vgg[i].float(), y_vgg[i].detach().float())  # Compute loss in float32
-                loss += self.weights[i] * x_loss.float()
-
-        return loss.half()
+            loss += self.weights[i] * self.criterion(x_vgg[i], y_vgg[i].detach())
+        
+        return loss
