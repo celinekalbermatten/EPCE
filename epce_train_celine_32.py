@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader
 import EPCE_ok_32
-#from EPCE import VGGLoss
+from EPCE_ok_32 import VGGLoss
 import glob
 from torchvision import transforms
 from torch.utils.data import DataLoader, Dataset
@@ -125,8 +125,8 @@ model = EPCE_ok_32.PPVisionTransformer()
 # define the loss function
 l1 = torch.nn.L1Loss()
 # TODO: could be 
-#perceptual_loss = VGGLoss()
-perceptual_loss = EPCE_ok_32.VGGLoss()
+perceptual_loss = VGGLoss()
+#perceptual_loss = EPCE_ok_32.VGGLoss()
 # define the optimizer
 # TODO: could be
 #optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr, betas=(0.9, 0.999))
@@ -258,14 +258,14 @@ for epoch in range(opt.epochs):
         #output_true = output_true.to(dtype=torch.half)
 
         #print('batch size:', opt.batch_size)
-        print('batch size:', batch_size)
+        #print('batch size:', batch_size)
 
         # forward pass through the model
-        print('cuda before')
-        print_gpu_info
+        #print('cuda before')
+        #print_gpu_info
         output = model(input)
-        print('cuda after')
-        print_gpu_info
+        #print('cuda after')
+        #print_gpu_info
 
         l1_loss = 0
         vgg_loss = 0

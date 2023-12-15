@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader
 import EPCE_ok
-#from EPCE import VGGLoss
+#from EPCE_ok import VGGLoss
 import glob
 from torchvision import transforms
 from torch.utils.data import DataLoader, Dataset

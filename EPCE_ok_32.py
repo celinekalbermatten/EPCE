@@ -461,8 +461,8 @@ class LPE(nn.Module):
         return image
 
 class Vgg19(torch.nn.Module):
-    def _init_(self, requires_grad=False):
-        super(Vgg19, self)._init_()
+    def __init__(self, requires_grad=False):
+        super(Vgg19, self).__init__()
         vgg_pretrained_features = models.vgg19(pretrained=True).features
         self.slice1 = torch.nn.Sequential()
         self.slice2 = torch.nn.Sequential()
@@ -482,6 +482,7 @@ class Vgg19(torch.nn.Module):
         if not requires_grad:
             for param in self.parameters():
                 param.requires_grad = False
+
 
     def forward(self, X):
         h_relu1 = self.slice1(X)
