@@ -90,7 +90,7 @@ batch_size = 1
 # ======================================
 
 dataset = HDRDataset(mode="train", opt=opt)
-#dataset = decrease_data_size(dataset)
+dataset = decrease_data_size(dataset)
 
 # split dataset into training and validation sets
 train_dataset, val_dataset = train_test_split(dataset, test_size=0.2, random_state=42)
@@ -120,6 +120,7 @@ model = EPCE_ok_32.PPVisionTransformer()
 
 # ========================================
 # Initialization of losses and optimizer
+# creation of directories
 # ========================================
 
 # define the loss function
@@ -131,6 +132,9 @@ perceptual_loss = VGGLoss()
 # TODO: could be
 #optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr, betas=(0.9, 0.999))
 optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
+
+# create directories to save the training results
+make_required_directories(mode="train")
 
 # ==================================================
 # Load the checkpoints if continuing training
@@ -305,19 +309,19 @@ for epoch in range(opt.epochs):
         optimizer.step()
 
         # output is the final reconstructed image so last in the array of outputs of n iterations
-        output = output[-1]
+        #output = output[-1]
 
         # accumulate the loss
         total_loss += loss.item()
 
         # save the results
-        if (batch + 1) % opt.save_results_after == 0: 
-            save_ldr_image(img_tensor=input, batch=0, path="./training_results/ldr_e_{}_b_{}.jpg".format(epoch, batch + 1),)
+        #if (batch + 1) % opt.save_results_after == 0: 
+        save_ldr_image(img_tensor=input, batch=0, path="./training_results/ldr_e_{}_b_{}.jpg".format(epoch, batch + 1),)
             
-            save_hdr_image(img_tensor=output, batch=0, path="./training_results/generated_hdr_e_{}_b_{}.hdr".format(epoch, batch + 1),)
+        save_hdr_image(img_tensor=output, batch=0, path="./training_results/generated_hdr_e_{}_b_{}.hdr".format(epoch, batch + 1),)
             
-            save_hdr_image(img_tensor=output_true, batch=0, path="./training_results/gt_hdr_e_{}_b_{}.hdr".format(epoch, batch + 1),)
-    
+        save_hdr_image(img_tensor=output_true, batch=0, path="./training_results/gt_hdr_e_{}_b_{}.hdr".format(epoch, batch + 1),)
+        
 
     print(f"Training loss: {losses_epoch[-1]}")
     losses_train.append(losses_epoch[-1])

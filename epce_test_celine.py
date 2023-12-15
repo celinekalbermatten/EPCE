@@ -7,7 +7,7 @@ from tqdm import tqdm
 from data_loader import HDRDataset
 from model import FHDR
 from options import Options
-import EPCE
+import EPCE_ok_32
 from util import make_required_directories, mu_tonemap, save_hdr_image, save_ldr_image
 
 # ======================================
@@ -21,12 +21,15 @@ opt.log_scores = True
 # print the configured options
 print(opt)
 
+# define the batch size
+batch_size = 1
+
 # ======================================
 # Load the data
 # ======================================
 
 dataset = HDRDataset(mode="test", opt=opt)
-data_loader = DataLoader(dataset, batch_size=opt.batch_size, shuffle=True)
+data_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
 # print the number of testing images
 print("Testing samples: ", len(dataset))
@@ -37,7 +40,7 @@ print("Testing samples: ", len(dataset))
 # ========================================
 
 # initialize EPCE model
-model = EPCE.PPVisionTransformer()
+model = EPCE_ok_32.PPVisionTransformer()
 #model = FHDR(iteration_count=opt.iter)
 
 """
@@ -103,15 +106,17 @@ with torch.no_grad():
         # get the HDR images
         ground_truth = data["hdr_image"]
         ground_truth = ground_truth.to(device)
+        print('ground truth:', ground_truth.size())
 
         # generate the output from the model
         output = model(input)
         print('output:', output.size())
-        output = output.squeeze(dim=0)
-        print('output after squeeze:', output.size())
+        #output = output[0] if output.shape[0] == 2 else output[1:]
+        #print('output after squeeze:', output.size())
 
         # get the final output from the model
-        output = output[-1]
+        #output = output[-1]
+        #print('output[-1]:', output.size())
 
         for batch_ind in range(len(output.data)):
 
