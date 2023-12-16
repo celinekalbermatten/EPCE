@@ -167,9 +167,7 @@ python3 train.py
 
 ### Pretrained models
 
-Three pre-trained models can be downloaded from the following links. 
-
-These models have been trained with the default options, on 256x256 size images for 200 epochs. (MAYBE MODIFY)
+Some pre-trained models can be downloaded from the following links. 
 
 - [EPCE model trained on a small dataset of clear sky images](https://drive.google.com/open?id=13vTGH-GVIWVL79X8NJra0yiguoO1Ox4V)
 - [EPCE model trained on 2% of the total of 1700 256x256 images with 200 epochs](https://drive.google.com/file/d/1_Bp6kR56uttLXwW9IWdaiGZwmIoDIqlG/view?usp=drive_link)
