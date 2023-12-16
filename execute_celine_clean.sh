@@ -7,6 +7,8 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem 16G
+#SBATCH --time 4:00:00
+
 
 echo STARTING AT `date`
 nvidia-smi
@@ -14,8 +16,6 @@ nvidia-smi
 cd /home/ckalberm/EPCE
 echo SUCCESSFULLY CHANGED LOCATION
 
-#python3 -u epce_train_celine.py 
-#python3 -u adam.py 
-python3 -u trainf.py
+python3 -u train.py
 
 echo FINISHED at `date`

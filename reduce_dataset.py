@@ -13,19 +13,25 @@ def reduce_dataset(dataset_path, output_path, percentage):
         matching_pairs_train = []
         matching_pairs_test = []
         for hdr_file in hdr_files:
-            hdr_prefix = hdr_file[:5]  # First 5 characters
+            # train -> take the first 5 characters (number of the image)
+            hdr_prefix = hdr_file[:5]  
+            # test -> take the first 9 characters (number of the image)
             hdr_prefix_long = hdr_file[:9]
-            hdr_suffix = hdr_file[-9:-4]  # Last 5 characters before extension
+            # train -> take the last 5 characters (number of the image)
+            hdr_suffix = hdr_file[-9:-4]  
             
             for ldr_file in ldr_files:
-                ldr_prefix = ldr_file[:5]  # First 5 characters
+                # train -> take the first 5 characters (number of the image)
+                ldr_prefix = ldr_file[:5]
+                # test -> take the first 9 characters (number of the image)
                 ldr_prefix_long = ldr_file[:9]
-                ldr_suffix = ldr_file[-9:-4]  # Last 5 characters before extension
+                # train -> take the last 5 characters (number of the image)
+                ldr_suffix = ldr_file[-9:-4]  
                 
                 if folder == 'train':
                     if hdr_prefix == ldr_prefix and hdr_suffix == ldr_suffix:
                         matching_pairs_train.append((hdr_file, ldr_file))
-                        break  # Found matching LDR file, break inner loop
+                        break  
                 
                 elif folder == 'test':
                     if hdr_prefix_long == ldr_prefix_long:
@@ -64,7 +70,7 @@ def reduce_dataset(dataset_path, output_path, percentage):
 
 # apply the splitting
 dataset_path = './dataset_final'
-output_path = './dataset_final_reduced'
-percentage_to_keep = 0.03  
+output_path = './dataset_final_reduced_10'
+percentage_to_keep = 0.1
 
 reduce_dataset(dataset_path, output_path, percentage_to_keep)
