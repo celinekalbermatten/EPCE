@@ -1,7 +1,15 @@
 # High Dynamic Range Image Reconstruction via Deep Explicit Polynomial Curve Estimation (EPCE)
 
 
-This repository is adapted from [the code](https://github.com/jqtangust/epce-hdr) linked to the paper [High Dynamic Range Image Reconstruction via Deep Explicit Polynomial Curve Estimation](https://arxiv.org/abs/2307.16426) authored by  Jiaqi Tang, Xiaogang Xu, Sixing Hu and Ying-Cong Chen presented at ECAI 2023.
+This repository is adapted from [the code](https://github.com/jqtangust/epce-hdr) linked to the paper [High Dynamic Range Image Reconstruction via Deep Explicit Polynomial Curve Estimation](https://arxiv.org/abs/2307.16426) authored by  Jiaqi Tang, Xiaogang Xu, Sixing Hu and Ying-Cong Chen presented at ECAI 2023. <br>
+
+The authors of the current repository are:
+
+- Claire Alexandra Friedrich
+- Céline Kalbermatten
+- Adam Zinebi
+
+The repository was created within the scope of a Machine Learning project during the course [CSS-433 Machine Learning](https://www.epfl.ch/labs/mlo/machine-learning-cs-433/) at [EPFL](https://www.epfl.ch/en/).
 
 
 ## Table of contents:
