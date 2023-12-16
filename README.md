@@ -14,7 +14,7 @@ The repository was created within the scope of a Machine Learning project during
 
 ## Table of contents:
 
-- [Introduction](#ibstract)
+- [Introduction](#introduction)
 - [Setup](#setup)
 - [Files](#files)
 - [Dataset](#dataset)
