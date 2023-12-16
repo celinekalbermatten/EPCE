@@ -54,10 +54,10 @@ The dataset should have the following folder structure:
     > train
         > HDR
 
-                > hdr_image_1.hdr/exr
-                > hdr_image_2.hdr/exr
-                .
-                .
+            > hdr_image_1.hdr/exr
+            > hdr_image_2.hdr/exr
+            .
+            .
 
         > LDR
 
@@ -70,10 +70,10 @@ The dataset should have the following folder structure:
     > test
         > HDR
 
-                > hdr_image_1.hdr/exr
-                > hdr_image_2.hdr/exr
-                .
-                .
+            > hdr_image_1.hdr/exr
+            > hdr_image_2.hdr/exr
+            .
+            .
 
         > LDR
 
