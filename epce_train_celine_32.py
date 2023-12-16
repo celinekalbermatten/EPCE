@@ -90,7 +90,7 @@ batch_size = 1
 # ======================================
 
 dataset = HDRDataset(mode="train", opt=opt)
-dataset = decrease_data_size(dataset)
+#dataset = decrease_data_size(dataset)
 
 # split dataset into training and validation sets
 train_dataset, val_dataset = train_test_split(dataset, test_size=0.2, random_state=42)
