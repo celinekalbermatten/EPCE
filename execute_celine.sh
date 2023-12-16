@@ -15,6 +15,6 @@ nvidia-smi
 cd /home/ckalberm/EPCE
 echo SUCCESSFULLY CHANGED LOCATION
 
-python3 -u epce_train_celine_32.py 
+python3 -u train.py 
 
 echo FINISHED at `date`

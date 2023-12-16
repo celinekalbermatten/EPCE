@@ -1,8 +1,8 @@
 import torch
 from torch import nn
 from torch.utils.data import DataLoader
-import EPCE_ok_32
-from EPCE_ok_32 import VGGLoss
+import EPCE_model
+from EPCE_model import VGGLoss
 import glob
 from torchvision import transforms
 from torch.utils.data import DataLoader, Dataset
@@ -16,7 +16,7 @@ import time
 
 from data_loader import HDRDataset, decrease_data_size
 from model import FHDR
-import potions
+import options
 from util import (
     load_checkpoint,
     make_required_directories,
@@ -81,7 +81,7 @@ for gpu in gpu_info:
 # ======================================
 
 # initalize the training options
-opt = potions.Options().parse()
+opt = options.Options().parse()
 batch_size = 1
 #batch_size = opt.batch_size
 
@@ -109,7 +109,7 @@ print("Validation samples: ", len(val_data_loader))
 
 # curve estimation model
 #model = EPCE.PPVisionTransformer().to(dtype=torch.half)
-model = EPCE_ok_32.PPVisionTransformer()
+model = EPCE_model.PPVisionTransformer()
 #for name, param in model.named_parameters():
     #print(f"Parameter initial: {name}, Dtype: {param.dtype}")
 # decrease the size of the model from torch.32 to torch.16
