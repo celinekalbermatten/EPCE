@@ -33,49 +33,6 @@ from sklearn.model_selection import train_test_split
 
 
 # ======================================
-# Information about GPUs -> DELETE later
-# ======================================
-
-import pynvml
-
-def get_gpu_info():
-    pynvml.nvmlInit()
-    device_count = pynvml.nvmlDeviceGetCount()
-    gpu_info = []
-    
-    for i in range(device_count):
-        handle = pynvml.nvmlDeviceGetHandleByIndex(i)
-        gpu_name = pynvml.nvmlDeviceGetName(handle)
-        gpu_memory = pynvml.nvmlDeviceGetMemoryInfo(handle)
-        
-        gpu_info.append({
-            "index": i,
-            "name": gpu_name,
-            "memory_total": gpu_memory.total,
-            "memory_used": gpu_memory.used,
-            "memory_free": gpu_memory.free
-        })
-    
-    pynvml.nvmlShutdown()
-    return gpu_info
-
-# Retrieve and print GPU information including free memory
-gpu_info = get_gpu_info()
-for gpu in gpu_info:
-    print(f"GPU {gpu['index']} Name: {gpu['name']}")
-    print(f"   Total Memory: {gpu['memory_total'] / 1024**2} MB")
-    print(f"   Used Memory : {gpu['memory_used'] / 1024**2} MB")
-    print(f"   Free Memory : {gpu['memory_free'] / 1024**2} MB")
-    print("-" * 20)
-
-
-
-#torch.cuda.set_device(1)
-# Set the device after ensuring the correct index
-#if torch.cuda.is_available():
-    #torch.cuda.set_device(1)
-
-# ======================================
 # Initial training options 
 # ======================================
 
@@ -186,10 +143,7 @@ if len(opt.gpu_ids) > 0:
     model.cuda()
 """
 
-# TODO: delete later
-# print information about CUDA devices
-for i in range(torch.cuda.device_count()):
-    print(f"Device {i}: {torch.cuda.get_device_name(i)}")
+
 
 # ========================================
 # GPU configuration
