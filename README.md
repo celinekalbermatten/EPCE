@@ -10,7 +10,6 @@ This repository is adapted from [the code](https://github.com/jqtangust/epce-hdr
 - [Setup](#setup)
 - [Dataset](#dataset)
 - [Training](#training)
-- [Pretrained models](#pretrained-models)
 - [Evaluation](#evaluation)
 - [Acknowledgement](#acknowledgement)
 
@@ -148,8 +147,7 @@ These models have been trained with the default options, on 256x256 size images 
 - FHDR model trained on clear sky 256x256 images with 200 epoch [UP-COMING]
 
 
-Evaluation of the model
-----------
+## Evaluation of the model
 
 The performance of the network can be evaluated using: 
 
@@ -166,8 +164,7 @@ python3 ACHTUNGTEST.py --ckpt_path /path/to/checkpoint
 python3 ACHTUNGTEST.py --log_scores
 ```
 
-Acknowledgement
-------
+## Acknowledgement
 
 This project on HDR reconstruction was provided by the [Laboratory of Integrated Performance in Design (LIPID)](https://www.epfl.ch/labs/lipid/) at EPFL and supervised by Stephen Wasilewski and Cho Yunjoung. 
 
