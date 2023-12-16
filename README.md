@@ -186,11 +186,7 @@ python3 test.py --ckpt_path /path/to/checkpoint
 - Test results (LDR input, HDR prediction and HDR ground truth) are stored in the **`test_results`** directory.
 - HDR images can be visualised using [OpenHDRViewer](https://viewer.openhdr.org) or by installing [HDR + WCG Image Viewer](https://apps.microsoft.com/detail/9PGN3NWPBWL9?rtc=1&hl=fr-ch&gl=CH) on windows.
 - If the checkpoint path is not specified, it defaults to `checkpoints/latest.ckpt` for evaluating the model.
-- PSNR and SSIM scores can be logged for quantitative evaluation by:
 
-```sh
-python3 test.py --log_scores
-```
 
 ## Acknowledgement
 
