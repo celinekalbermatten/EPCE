@@ -3,6 +3,7 @@ training_results*/
 test_results*/
 checkpoints*/
 foldercheckp*/
+plot*/
 /__pycache__/
 .vscode
 *.pyc

@@ -5,10 +5,9 @@ from skimage.measure import compare_ssim
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 from data_loader import HDRDataset
-from model import FHDR
 from options import Options
-import EPCE_ok_32
-from util import make_required_directories, mu_tonemap, save_hdr_image, save_ldr_image
+import EPCE_model
+from util import make_required_directories, save_hdr_image, save_ldr_image
 
 # ======================================
 # Initial training options 
@@ -23,6 +22,7 @@ print(opt)
 
 # define the batch size
 batch_size = 1
+opt.batch_size = 1
 
 # ======================================
 # Load the data
@@ -40,37 +40,14 @@ print("Testing samples: ", len(dataset))
 # ========================================
 
 # initialize EPCE model
-model = EPCE_ok_32.PPVisionTransformer()
-#model = FHDR(iteration_count=opt.iter)
-
-"""
-# get GPU IDs from options
-str_ids = opt.gpu_ids.split(",")
-opt.gpu_ids = []
-for str_id in str_ids:
-    id = int(str_id)
-    if id >= 0:
-        opt.gpu_ids.append(id)
-
-# set GPU device
-if len(opt.gpu_ids) > 0:
-    assert torch.cuda.is_available()
-    assert torch.cuda.device_count() >= len(opt.gpu_ids)
-
-    torch.cuda.set_device(opt.gpu_ids[0])
-
-    if len(opt.gpu_ids) > 1:
-        model = torch.nn.DataParallel(model, device_ids=opt.gpu_ids)
-
-    model.cuda()
-"""
+model = EPCE_model.PPVisionTransformer()
 
 # ========================================
 # GPU configuration
 # ========================================
 
 # set the device -> CPU or GPU 
-device = torch.device("cuda")
+device = torch.device("cpu")
 # move the model to the device
 model.to(device)
 
@@ -83,7 +60,7 @@ model.to(device)
 mse_loss = nn.MSELoss()
 
 # load the checkpoint for the evaluation
-model.load_state_dict(torch.load(opt.ckpt_path))
+model.load_state_dict(torch.load(opt.ckpt_path, map_location=torch.device('cpu')))
 
 # make the necessary directories for saving the test results
 make_required_directories(mode="test")
@@ -106,17 +83,12 @@ with torch.no_grad():
         # get the HDR images
         ground_truth = data["hdr_image"]
         ground_truth = ground_truth.to(device)
-        print('ground truth:', ground_truth.size())
 
         # generate the output from the model
         output = model(input)
-        print('output:', output.size())
-        #output = output[0] if output.shape[0] == 2 else output[1:]
-        #print('output after squeeze:', output.size())
 
         # get the final output from the model
         #output = output[-1]
-        #print('output[-1]:', output.size())
 
         for batch_ind in range(len(output.data)):
 

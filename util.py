@@ -95,7 +95,7 @@ def save_checkpoint(epoch, model):
     torch.save(model.state_dict(), checkpoint_path)
     torch.save(model.state_dict(), latest_path)
     np.savetxt("./checkpoints/state.txt", [epoch + 1], fmt="%d")
-    print("Saved checkpoint for epoch ", epoch)
+    print("Saved checkpoint for epoch", epoch)
 
 
 def update_lr(optimizer, epoch, opt):

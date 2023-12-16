@@ -14,6 +14,6 @@ nvidia-smi
 cd /home/ckalberm/EPCE
 echo SUCCESSFULLY CHANGED LOCATION
 
-python3 -u epce_test_celine.py
+python3 -u test.py
 
 echo FINISHED at `date`
