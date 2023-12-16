@@ -117,4 +117,61 @@ python3 split_data.py data_path
 **Note:** `data_path` is the path (str) to the dataset on your local computer
 
 
+## Training
+
+
+After the dataset has been prepared, the model can be trained using:
+
+```sh
+python3 ACHTUNGACHTUNG.py
+```
+- Training results (LDR input, HDR prediction and HDR ground truth) are stored in the **`train_results`** directory.
+
+The corresponding parameters/options for training have been specified in the **`options.py`** file and can be easily altered. They can be logged using -
+
+```sh
+python3 ACHTUNGACHTUNG.py --help
+```
+- **`--iter`** param is used to specify the number of feedback iterations for global and local feedback mechanisms (refer to paper/architecture diagram)
+- Checkpoints of the model are saved in the **`checkpoints`** directory. (Saved after every 2 epochs by default)
+- GPU is used for training. Specify GPU IDs using **`--gpu_ids`** param.
+- The model takes around 5 hours to train on a dataset of 1700 images on a Tesla V100-PCIE-32GB GPU.
+
+### Pretrained models
+
+Three pre-trained models can be downloaded from the following links. 
+
+These models have been trained with the default options, on 256x256 size images for 200 epochs. (MAYBE MODIFY)
+
+- [2-Iterations model from paper](https://drive.google.com/open?id=13vTGH-GVIWVL79X8NJra0yiguoO1Ox4V)
+- [FHDR model trained on 1700 256x256 images with 200 epochs](https://drive.google.com/file/d/1_Bp6kR56uttLXwW9IWdaiGZwmIoDIqlG/view?usp=drive_link)
+- FHDR model trained on clear sky 256x256 images with 200 epoch [UP-COMING]
+
+
+Evaluation of the model
+----------
+
+The performance of the network can be evaluated using: 
+
+```sh
+python3 ACHTUNGTEST.py --ckpt_path /path/to/checkpoint
+```
+
+- Test results (LDR input, HDR prediction and HDR ground truth) are stored in the **`test_results`** directory.
+- HDR images can be viewed using [OpenHDRViewer](https://viewer.openhdr.org) or by installing [HDR + WCG Image Viewer](https://apps.microsoft.com/detail/9PGN3NWPBWL9?rtc=1&hl=fr-ch&gl=CH) on windows.
+- If the checkpoint path is not specified, it defaults to `checkpoints/latest.ckpt` for evaluating the model.
+- PSNR and SSIM scores can be logged for quantitative evaluation by:
+
+```sh
+python3 ACHTUNGTEST.py --log_scores
+```
+
+Acknowledgement
+------
+
+This project on HDR reconstruction was provided by the Laboratory of Integrated Performance in Design (LIPID), and supervised by Stephen Wasilewski and Cho Yunjoung. 
+
+The code was adapted from the previously cited [repository](https://github.com/mukulkhanna/fhdr).
+
+
 
