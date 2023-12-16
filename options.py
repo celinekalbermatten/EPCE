@@ -3,7 +3,7 @@ import sys
 
 class Options:
     """
-    Options and settings for training, debugging and evaluation of FHDR model.
+    Options and settings for training, debugging and evaluation of EPCE model.
     """
 
     def __init__(self):
