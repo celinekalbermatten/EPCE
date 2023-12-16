@@ -46,7 +46,7 @@ pip install -r requirements.txt
 
 The dataset is expected to contain LDR (input) and HDR (ground truth) image pairs. The network is trained to learn the mapping from LDR images to their corresponding HDR ground truth counterparts.
 
-The dataset should have the following folder structure - 
+The dataset should have the following folder structure: 
 
 ```
 > dataset
