@@ -160,19 +160,10 @@ In order to reduce the dataset, the file `reduce_dataset.py` can be executed. A 
 After the dataset has been prepared, the model can be trained using:
 
 ```sh
-python3 ACHTUNGACHTUNG.py
+python3 train.py
 ```
 - Training results (LDR input, HDR prediction and HDR ground truth) are stored in the **`train_results`** directory.
 
-The corresponding parameters/options for training have been specified in the **`options.py`** file and can be easily altered. They can be logged using -
-
-```sh
-python3 ACHTUNGACHTUNG.py --help
-```
-- **`--iter`** param is used to specify the number of feedback iterations for global and local feedback mechanisms (refer to paper/architecture diagram)
-- Checkpoints of the model are saved in the **`checkpoints`** directory. (Saved after every 2 epochs by default)
-- GPU is used for training. Specify GPU IDs using **`--gpu_ids`** param.
-- The model takes around 5 hours to train on a dataset of 1700 images on a Tesla V100-PCIE-32GB GPU.
 
 ### Pretrained models
 
@@ -180,9 +171,10 @@ Three pre-trained models can be downloaded from the following links.
 
 These models have been trained with the default options, on 256x256 size images for 200 epochs. (MAYBE MODIFY)
 
-- [2-Iterations model from paper](https://drive.google.com/open?id=13vTGH-GVIWVL79X8NJra0yiguoO1Ox4V)
-- [FHDR model trained on 1700 256x256 images with 200 epochs](https://drive.google.com/file/d/1_Bp6kR56uttLXwW9IWdaiGZwmIoDIqlG/view?usp=drive_link)
-- FHDR model trained on clear sky 256x256 images with 200 epoch [UP-COMING]
+- [EPCE model trained on a small dataset of clear sky images](https://drive.google.com/open?id=13vTGH-GVIWVL79X8NJra0yiguoO1Ox4V)
+- [EPCE model trained on 2% of the total of 1700 256x256 images with 200 epochs](https://drive.google.com/file/d/1_Bp6kR56uttLXwW9IWdaiGZwmIoDIqlG/view?usp=drive_link)
+- [EPCE model trained on 10% of the total of 1700 256x256 images with 200 epochs](https://drive.google.com/file/d/1_Bp6kR56uttLXwW9IWdaiGZwmIoDIqlG/view?usp=drive_link)
+- [EPCE model trained on 25% of the total of 1700 256x256 images with 100 epochs](https://drive.google.com/file/d/1_Bp6kR56uttLXwW9IWdaiGZwmIoDIqlG/view?usp=drive_link)
 
 
 ## Evaluation of the model
