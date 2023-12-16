@@ -7,7 +7,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem 16G
-#SBATCH --time 1:00:00
+#SBATCH --time 10:00:00
 
 echo STARTING AT `date`
 nvidia-smi
