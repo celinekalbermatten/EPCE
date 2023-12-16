@@ -50,33 +50,24 @@ The dataset should have the following folder structure:
 
 ```
 > dataset
-
     > train
         > HDR
-
             > hdr_image_1.hdr/exr
             > hdr_image_2.hdr/exr
             .
             .
-
         > LDR
-
             > ldr_image_1.jpg/png
             > ldr_image_2.jpg/png
             .
             .
-
-
     > test
         > HDR
-
             > hdr_image_1.hdr/exr
             > hdr_image_2.hdr/exr
             .
             .
-
         > LDR
-
             > ldr_image_1.jpg/png
             > ldr_image_2.jpg/png
             .
