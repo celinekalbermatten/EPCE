@@ -5,7 +5,7 @@ This repository is adapted from [the code](https://github.com/jqtangust/epce-hdr
 
 The authors of the current repository are:
 
-- Claire Alexandra Friedrich
+- Claire Alexandra Friedrich 
 - Céline Kalbermatten
 - Adam Zinebi
 
