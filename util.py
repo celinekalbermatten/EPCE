@@ -6,8 +6,17 @@ import matplotlib.pyplot as plt
 
 
 def load_checkpoint(model, ckpt_path):
-    """ loading checkpoints for continuing training or evaluation """
-
+    """
+    Loads checkpoints for continuing training or evaluation.
+    
+    Parameters:
+        model (torch.nn.Module): The model to load the checkpoint into.
+        ckpt_path (str): Path to the checkpoint file.
+    
+    Returns:
+        int: Start epoch from where training resumes.
+        torch.nn.Module: Model with loaded checkpoint state.
+    """
     start_epoch = np.loadtxt("./checkpoints/state.txt", dtype=int)
     model.load_state_dict(torch.load(ckpt_path))
     print("Resuming from epoch ", start_epoch)
@@ -15,6 +24,12 @@ def load_checkpoint(model, ckpt_path):
 
 
 def make_required_directories(mode):
+    """
+    Creates necessary directories based on the mode (train or test).
+    
+    Parameters:
+        mode (str): Mode indicating whether it's for training or testing.
+    """
     if mode == "train":
         if not os.path.exists("./checkpoints"):
             print("Making checkpoints directory")
@@ -30,15 +45,27 @@ def make_required_directories(mode):
 
 
 def mu_tonemap(img):
-    """ tonemapping HDR images using μ-law before computing loss """
-
+    """
+    Tonemaps HDR images using μ-law before computing loss.
+    
+    Parameters:
+        img (torch.Tensor): HDR image tensor.
+    
+    Returns:
+        torch.Tensor: Tonemapped HDR image tensor.
+    """
     MU = 5000.0
     return torch.log(1.0 + MU * (img + 1.0) / 2.0) / np.log(1.0 + MU)
 
 
 def write_hdr(hdr_image, path):
-    """ Writing HDR image in radiance (.hdr) format """
-
+    """
+    Writes HDR image in radiance (.hdr) format.
+    
+    Parameters:
+        hdr_image (numpy.ndarray): HDR image as an array.
+        path (str): Path to save the HDR image.
+    """
     norm_image = cv2.cvtColor(hdr_image, cv2.COLOR_BGR2RGB)
     with open(path, "wb") as f:
         norm_image = (norm_image - norm_image.min()) / (
@@ -61,8 +88,14 @@ def write_hdr(hdr_image, path):
 
 
 def save_hdr_image(img_tensor, batch, path):
-    """ pre-processing HDR image tensor before writing """
-
+    """
+    Pre-processes HDR image tensor before writing it.
+    
+    Parameters:
+        img_tensor (torch.Tensor): HDR image tensor.
+        batch (int): Batch index.
+        path (str): Path to save the HDR image.
+    """
     img = img_tensor.data[batch].cpu().float().numpy()
     img = np.transpose(img, (1, 2, 0))
 
@@ -70,8 +103,14 @@ def save_hdr_image(img_tensor, batch, path):
 
 
 def save_ldr_image(img_tensor, batch, path):
-    """ pre-processing and writing LDR image tensor """
-
+    """
+    Pre-processes and writes LDR image tensor.
+    
+    Parameters:
+        img_tensor (torch.Tensor): LDR image tensor.
+        batch (int): Batch index.
+        path (str): Path to save the LDR image.
+    """
     img = img_tensor.data[batch].cpu().float().numpy()
     img = 255 * (np.transpose(img, (1, 2, 0)) + 1) / 2
 
@@ -80,18 +119,15 @@ def save_ldr_image(img_tensor, batch, path):
 
 
 def save_checkpoint(epoch, model):
-    """ Saving model checkpoint """
-
-    #checkpoint_dir = "./checkpoints"
-
-    # Check if the directory exists, if not, create it
-    #if not os.path.exists(checkpoint_dir):
-        #os.makedirs(checkpoint_dir)
-
-    #checkpoint_path = os.path.join(checkpoint_dir, "epoch_" + str(epoch) + ".ckpt")
+    """
+    Saves a model checkpoint.
+    
+    Parameters:
+        epoch (int): Epoch number.
+        model (torch.nn.Module): Model to be saved.
+    """
     checkpoint_path = os.path.join("./checkpoints", "epoch_" + str(epoch) + ".ckpt")
     latest_path = os.path.join("./checkpoints", "latest.ckpt")
-    #latest_path = os.path.join(checkpoint_dir, "latest.ckpt")
     torch.save(model.state_dict(), checkpoint_path)
     torch.save(model.state_dict(), latest_path)
     np.savetxt("./checkpoints/state.txt", [epoch + 1], fmt="%d")
@@ -99,8 +135,14 @@ def save_checkpoint(epoch, model):
 
 
 def update_lr(optimizer, epoch, opt):
-    """ Linearly decaying model learning rate after specified (opt.lr_decay_after) epochs """
-
+    """
+    Linearly decays the model learning rate after specified epochs.
+    
+    Parameters:
+        optimizer (torch.optim.Optimizer): Model optimizer.
+        epoch (int): Current epoch.
+        opt (argparse.Namespace): Command-line arguments.
+    """
     new_lr = opt.lr - opt.lr * (epoch - opt.lr_decay_after) / (
         opt.epochs - opt.lr_decay_after
     )
@@ -113,7 +155,13 @@ def update_lr(optimizer, epoch, opt):
 
 def plot_losses(training_losses, validation_losses, num_epochs, path):
     """
-    Plot the training and validation losses in function of the number of epochs.
+    Plots the training and validation losses.
+    
+    Parameters:
+        training_losses (list): List of training losses.
+        validation_losses (list): List of validation losses.
+        num_epochs (int): Total number of epochs.
+        path (str): Path to save the plot.
     """
     plt.figure()
     plt.plot(np.linspace(1, num_epochs, num=num_epochs), training_losses, label="training")
@@ -126,6 +174,9 @@ def plot_losses(training_losses, validation_losses, num_epochs, path):
 
 
 def print_gpu_info():
+    """
+    Prints GPU information.
+    """
     try:
         output = subprocess.check_output(["nvidia-smi"])
         print(output.decode("utf-8"))  # Print the GPU information

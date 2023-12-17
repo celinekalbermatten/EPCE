@@ -1,19 +1,16 @@
 import torch
 from torch import nn
 from torch.utils.data import DataLoader
-from torchvision import transforms
 
-import matplotlib.pyplot as plt
 import os
 import time
 from sklearn.model_selection import train_test_split
 
 import EPCE_model
 from EPCE_model import VGGLoss
-from data_loader import HDRDataset, decrease_data_size
+from data_loader import HDRDataset
 import options
 from util import (make_required_directories, save_checkpoint, save_hdr_image, save_ldr_image, update_lr, plot_losses,)
-
 
 # ======================================
 # Information about GPUs -> DELETE later
@@ -22,6 +19,9 @@ from util import (make_required_directories, save_checkpoint, save_hdr_image, sa
 import pynvml
 
 def get_gpu_info():
+    """
+    Retrieve information about available GPUs using NVIDIA Management Library (NVML) via pynvml
+    """
     pynvml.nvmlInit()
     device_count = pynvml.nvmlDeviceGetCount()
     gpu_info = []
@@ -42,7 +42,7 @@ def get_gpu_info():
     pynvml.nvmlShutdown()
     return gpu_info
 
-# Retrieve and print GPU information including free memory
+# retrieve and print GPU information including free memory
 gpu_info = get_gpu_info()
 for gpu in gpu_info:
     print(f"GPU {gpu['index']} Name: {gpu['name']}")
@@ -66,7 +66,6 @@ opt.save_results_after = 10
 # ======================================
 
 dataset = HDRDataset(mode="train", opt=opt)
-#dataset = decrease_data_size(dataset)
 
 # split dataset into training and validation sets
 train_dataset, val_dataset = train_test_split(dataset, test_size=0.2, random_state=42)
@@ -105,11 +104,6 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
 
 # create directories to save the training results
 make_required_directories(mode="train")
-
-# TODO: delete later
-# print information about CUDA devices
-for i in range(torch.cuda.device_count()):
-    print(f"Device {i}: {torch.cuda.get_device_name(i)}")
 
 # ========================================
 # Training
@@ -182,10 +176,6 @@ for epoch in range(opt.epochs):
         # backpropagation and optimization 
         loss.backward()
         optimizer.step()
-
-        # TODO -> delete or decomment
-        # output is the final reconstructed image so last in the array of outputs of n iterations
-        #output = output[-1]
 
         # accumulate the loss
         total_loss += loss.item()

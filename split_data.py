@@ -1,5 +1,3 @@
-"""File to split the downloaded data (tile) into train and test"""
-
 import os
 import shutil
 import numpy as np
@@ -36,7 +34,6 @@ for sub_folder in sub_folders:
         if not os.path.exists(f"./dataset/{sub_folder}/{sub_sub_folder}"):
             print(f"Making {sub_folder}/{sub_sub_folder} directory")
             os.makedirs(f"./dataset/{sub_folder}/{sub_sub_folder}")
-
 
 # ===========================================
 # Moving data into the corresponding folders
