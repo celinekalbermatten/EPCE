@@ -174,9 +174,9 @@ python3 train.py
 
 Some pre-trained models can be downloaded from the following links. It always contains the latest checkpoint of the training process.
 
-- [EPCE model trained on 34 full images in black and white for 200 epochs](https://drive.google.com/open?id=13vTGH-GVIWVL79X8NJra0yiguoO1Ox4V)
-- [EPCE model trained on 34 full images in black and white for 500 epochs](https://drive.google.com/open?id=13vTGH-GVIWVL79X8NJra0yiguoO1Ox4V)
-- [EPCE model trained on 2% of the total of 1700 256x256 tiled coloured images with 200 epochs](https://drive.google.com/file/d/1_Bp6kR56uttLXwW9IWdaiGZwmIoDIqlG/view?usp=drive_link)
+- [EPCE model trained on 34 full images in black and white for 200 epochs](https://drive.google.com/file/d/1AyuuPePtOPpfvnFMlIIWgz762Zalojl4/view?usp=sharing)
+- [EPCE model trained on 34 full images in black and white for 500 epochs](mettrelien)
+- [EPCE model trained on 2% of the total of 1700 256x256 tiled coloured images with 200 epochs](mettrelien)
 
 
 ## Evaluation of the model
