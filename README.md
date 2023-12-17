@@ -71,7 +71,7 @@ The file `split_data.py` creates a dataset in the structure needed for the train
 
 The file `reduce_tiled_dataset.py` reduces the created dataset to a certain percentage of it. More information can be found in the part about the [dataset](#dataset).
 
-The file `dataloader.py` defines a custom HDR class that loads LDR and HDR images. It provides methods to transform the images into tensors and organize the into a dictionary. MAYBE MENTION THE DECREASE DATA SIZE FUNCTION
+The file `dataloader.py` defines a custom HDR class that loads LDR and HDR images. It provides methods to transform the images into tensors and organize the into a dictionary.
 
 The file `EPCE_model.py` implements a neural network architecture for HDR image processing and enhancement. It includes modules for curve estimation using polynomial functions, pixel-wise learning for image refinement and a Pyramid-Path Vision Transformer (PPViT) with transformer blocks, attention mechanisms and up- and downsampling layers, enabling advanced HDR image reconstruction. 
 
@@ -165,7 +165,7 @@ After the dataset has been prepared, the model can be trained using:
 python3 train.py
 ```
 - Training results (LDR input, HDR prediction and HDR ground truth) are stored in the **`train_results`** directory. The number of stored results can be varied by varying the `opt.save_results_after` parameter. If no images should be stored, the corresponding part can be commented in the code.
-- Training on the full black and white dataset takes about 10 seconds per epoch. This gives a total of 30 minutes for 200 epochs and 80 minutes for 500 epochs.
+- Training on the full black and white dataset takes about 10 seconds per epoch. This gives a total of 30 minutes for 200 epochs and 60 minutes for 400 epochs.
 - Training on the full tiled colour dataset takes about 45 minutes per epoch. Training on only 25% or 10% of the whole dataset takes 500 or 200 seconds per epoch respectively. Training on 2% of the whole dataset takes about 45 seconds per epoch and therefore a total of about 2.5 hours for 200 epochs. 
 
 
@@ -175,7 +175,7 @@ python3 train.py
 Some pre-trained models can be downloaded from the following links. It always contains the latest checkpoint of the training process.
 
 - [EPCE model trained on 34 full images in black and white for 200 epochs](https://drive.google.com/file/d/1AyuuPePtOPpfvnFMlIIWgz762Zalojl4/view?usp=sharing)
-- [EPCE model trained on 34 full images in black and white for 500 epochs](mettrelien)
+- [EPCE model trained on 34 full images in black and white for 400 epochs](https://drive.google.com/file/d/1DU3pNbqjESL-X_H2PXLTNSDH7avRaesN/view?usp=sharing)
 - [EPCE model trained on 2% of the total of 1700 256x256 tiled coloured images with 200 epochs](mettrelien)
 
 
