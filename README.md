@@ -195,6 +195,7 @@ python3 test.py --ckpt_path /path/to/checkpoint
 ## Acknowledgement
 
 This project on HDR reconstruction was provided by the [Laboratory of Integrated Performance in Design (LIPID)](https://www.epfl.ch/labs/lipid/) at EPFL and supervised by Stephen Wasilewski and Cho Yunjoung. 
+We are grateful to Stephen Wasilewski, Cho Yunjoung and the entire team at LIPID for their support and guidance throughout this project. 
 
 The code was adapted from the previously cited [repository](https://github.com/jqtangust/epce-hdr).
 
