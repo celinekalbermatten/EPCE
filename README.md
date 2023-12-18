@@ -176,7 +176,7 @@ Some pre-trained models can be downloaded from the following links. It always co
 
 - [EPCE model trained on 34 full images in black and white for 200 epochs](https://drive.google.com/file/d/1AyuuPePtOPpfvnFMlIIWgz762Zalojl4/view?usp=sharing)
 - [EPCE model trained on 34 full images in black and white for 400 epochs](https://drive.google.com/file/d/1DU3pNbqjESL-X_H2PXLTNSDH7avRaesN/view?usp=sharing)
-- [EPCE model trained on 2% of the total of 1700 256x256 tiled coloured images with 200 epochs](mettrelien)
+- [EPCE model trained on 2% of the total of 1700 256x256 tiled coloured images with 200 epochs](https://drive.google.com/file/d/1uZTgso8eQrJTSvu0vqfmGSodXr5uhh1e/view?usp=sharing)
 
 
 ## Evaluation of the model
@@ -190,6 +190,14 @@ python3 test.py --ckpt_path /path/to/checkpoint
 - Test results (LDR input, HDR prediction and HDR ground truth) are stored in the **`test_results`** directory. If no images should be stored, the corresponding part can be commented in the code.
 - HDR images can be visualised using [OpenHDRViewer](https://viewer.openhdr.org) or by installing [HDR + WCG Image Viewer](https://apps.microsoft.com/detail/9PGN3NWPBWL9?rtc=1&hl=fr-ch&gl=CH) on windows.
 - If the checkpoint path is not specified, it defaults to `checkpoints/latest.ckpt` for evaluating the model.
+
+### Test results with the pretrained models
+
+The generated test HDR images for each of the above models can be found at the following links: 
+
+- [Test results of the EPCE model trained on 34 full images in black and white for 200 epochs](lien)
+- [Test results of EPCE model trained on 34 full images in black and white for 400 epochs](https://drive.google.com/drive/folders/1hamkzUn0yuthCIhBA1jYqAG_QURVxUHZ?usp=sharing)
+- [Test results of the EPCE model trained on 2% of the total of 1700 256x256 tiled coloured images with 200 epochs](https://drive.google.com/drive/folders/1YQpXP0tta-8KXKB51ivSpa-P926QEyHh?usp=sharing)
 
 
 ## Acknowledgement
