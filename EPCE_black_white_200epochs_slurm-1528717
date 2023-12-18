@@ -1,0 +1,40 @@
+STARTING AT Mon Dec 18 12:12:25 CET 2023
+Mon Dec 18 12:12:25 2023       
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 525.105.17   Driver Version: 525.105.17   CUDA Version: 12.0     |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|                               |                      |               MIG M. |
+|===============================+======================+======================|
+|   0  Tesla V100-PCIE...  On   | 00000000:86:00.0 Off |                  Off |
+| N/A   70C    P0   108W / 250W |   2170MiB / 32768MiB |     85%      Default |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+|   1  Tesla V100-PCIE...  On   | 00000000:D8:00.0 Off |                  Off |
+| N/A   59C    P0    51W / 250W |      0MiB / 32768MiB |      0%      Default |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+                                                                               
++-----------------------------------------------------------------------------+
+| Processes:                                                                  |
+|  GPU   GI   CI        PID   Type   Process name                  GPU Memory |
+|        ID   ID                                                   Usage      |
+|=============================================================================|
+|    0   N/A  N/A   2541640      C   .../venvs/pytorch/bin/python     2166MiB |
++-----------------------------------------------------------------------------+
+SUCCESSFULLY CHANGED LOCATION
+Namespace(batch_size=1, ckpt_path='./checkpoints/latest.ckpt', continue_train=False, epochs=200, gpu_ids='0', iter=1, log_after=500, log_scores=True, lr=0.0002, lr_decay_after=100, print_model=False, save_ckpt_after=2, save_results_after=1000)
+Testing samples:  9
+Making test_results directory
+Starting evaluation. Results will be saved in '/test_results' directory
+Testing %:   0%|          | 0/9 [00:00<?, ?it/s]/home/ckalberm/venvs/ml/lib64/python3.6/site-packages/torch/nn/functional.py:1340: UserWarning: nn.functional.tanh is deprecated. Use torch.tanh instead.
+  warnings.warn("nn.functional.tanh is deprecated. Use torch.tanh instead.")
+/home/ckalberm/EPCE/util.py:82: RuntimeWarning: invalid value encountered in true_divide
+  scaled_mantissa = mantissa * 255.0 / brightest
+Testing %:  11%|█         | 1/9 [00:00<00:05,  1.41it/s]Testing %:  22%|██▏       | 2/9 [00:00<00:03,  1.84it/s]Testing %:  33%|███▎      | 3/9 [00:01<00:02,  2.37it/s]Testing %:  44%|████▍     | 4/9 [00:01<00:01,  2.70it/s]Testing %:  56%|█████▌    | 5/9 [00:01<00:01,  3.29it/s]Testing %:  67%|██████▋   | 6/9 [00:01<00:00,  3.63it/s]Testing %:  78%|███████▊  | 7/9 [00:03<00:01,  1.32it/s]Testing %:  89%|████████▉ | 8/9 [00:03<00:00,  1.73it/s]Testing %: 100%|██████████| 9/9 [00:05<00:00,  1.06it/s]Testing %: 100%|██████████| 9/9 [00:05<00:00,  1.65it/s]
+===> Avg PSNR: -14.1628 dB
+Avg SSIM -> 0.6652184250966018
+Avg MSE -> 143.13503934939703
+Evaluation completed.
+FINISHED at Mon Dec 18 12:12:52 CET 2023
