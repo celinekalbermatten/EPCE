@@ -19,9 +19,9 @@ class HDRDataset(Dataset):
 
         # determine the dataset based on the mode
         if mode == "train":
-            self.dataset_path = os.path.join(f"./dataset_final_reduced/train")
+            self.dataset_path = os.path.join(f"./path_to_dataset/train")
         else:
-            self.dataset_path = os.path.join(f"./dataset_final_reduced/test")
+            self.dataset_path = os.path.join(f"./path_to_dataset/test")
 
         # define the paths for the LDR and HDR images
         self.ldr_data_path = os.path.join(self.dataset_path, "LDR")
