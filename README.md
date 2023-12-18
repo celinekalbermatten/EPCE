@@ -54,7 +54,7 @@ pip install -r requirements.txt
 ## Files
 
 - `split_data.py`
-- `reduce_dataset.py`
+- `reduce_tiled_dataset.py`
 - `dataloader.py`
 - `EPCE_model.py`
 - `train.py`
@@ -69,9 +69,9 @@ The whole implementation of the project has been done in Python.
 
 The file `split_data.py` creates a dataset in the structure needed for the training and testing of the model. More information can be found in the part about the [dataset](#dataset).
 
-The file `reduce_dataset.py` reduces the created dataset to a certain percentage of it. More information can be found in the part about the [dataset](#dataset).
+The file `reduce_tiled_dataset.py` reduces the created dataset to a certain percentage of it. More information can be found in the part about the [dataset](#dataset).
 
-The file `dataloader.py` defines a custom HDR class that loads LDR and HDR images. It provides methods to transform the images into tensors and organize the into a dictionary. MAYBE MENTION THE DECREASE DATA SIZE FUNCTION
+The file `dataloader.py` defines a custom HDR class that loads LDR and HDR images. It provides methods to transform the images into tensors and organize the into a dictionary.
 
 The file `EPCE_model.py` implements a neural network architecture for HDR image processing and enhancement. It includes modules for curve estimation using polynomial functions, pixel-wise learning for image refinement and a Pyramid-Path Vision Transformer (PPViT) with transformer blocks, attention mechanisms and up- and downsampling layers, enabling advanced HDR image reconstruction. 
 
@@ -118,7 +118,9 @@ The dataset should have the following folder structure:
             .
 ```
 
-- The train and test datasets can be downloaded [here](https://drive.google.com/drive/folders/1KyE1_YEZJeJ_O8cztDCHOH0f19J_vnnb?usp=sharing)
+- The train and test datasets of 1700 tiled coloured images can be downloaded [here](https://drive.google.com/drive/folders/1KyE1_YEZJeJ_O8cztDCHOH0f19J_vnnb?usp=sharing).
+  The training set consists of the 1700 tiled images that have been created from the 34 full images, which together form the testing set.
+- The train and test dataset of 34 full images in black and white can be dowloaded [here](https://drive.google.com/drive/folders/1qgAQajoZujeJ700HGq5aJ6Ym9kww8Zad?usp=sharing)
 
 
 ### Create your own dataset
@@ -150,8 +152,8 @@ python3 split_data.py data_path
 
 ### Reduce the size of the dataset
 
-Since the EPCE model is very large and training on a lot of images takes a lot of time, the dataset can be reduced to a certain percentage of it. By doing so, the precision of the model will be less high but the training time is decreased significantly. 
-In order to reduce the dataset, the file `reduce_dataset.py` can be executed. A new directory containing the reduced dataset is created and the model can then be trained on this reduced dataset.
+Since the EPCE model is very large and training on a lot of coloured images takes a lot of time, the dataset can be reduced to a certain percentage of it. By doing so, the precision of the model will be less high but the training time is decreased significantly. 
+In order to reduce the dataset, the file `reduce_tiled_dataset.py` can be executed. A new directory containing the reduced dataset is created and the model can then be trained on this reduced dataset. The reduced dataset consists of tiled images for training as well as for testing. No full images are included. 
 
 
 ## Training
@@ -162,17 +164,19 @@ After the dataset has been prepared, the model can be trained using:
 ```sh
 python3 train.py
 ```
-- Training results (LDR input, HDR prediction and HDR ground truth) are stored in the **`train_results`** directory.
+- Training results (LDR input, HDR prediction and HDR ground truth) are stored in the **`train_results`** directory. The number of stored results can be varied by varying the `opt.save_results_after` parameter. If no images should be stored, the corresponding part can be commented in the code.
+- Training on the full black and white dataset takes about 10 seconds per epoch. This gives a total of 30 minutes for 200 epochs and 60 minutes for 400 epochs.
+- Training on the full tiled colour dataset takes about 45 minutes per epoch. Training on only 25% or 10% of the whole dataset takes 500 or 200 seconds per epoch respectively. Training on 2% of the whole dataset takes about 45 seconds per epoch and therefore a total of about 2.5 hours for 200 epochs. 
+
 
 
 ### Pretrained models
 
-Some pre-trained models can be downloaded from the following links. 
+Some pre-trained models can be downloaded from the following links. It always contains the latest checkpoint of the training process.
 
-- [EPCE model trained on a small dataset of clear sky images](https://drive.google.com/open?id=13vTGH-GVIWVL79X8NJra0yiguoO1Ox4V)
-- [EPCE model trained on 2% of the total of 1700 256x256 images with 200 epochs](https://drive.google.com/file/d/1_Bp6kR56uttLXwW9IWdaiGZwmIoDIqlG/view?usp=drive_link)
-- [EPCE model trained on 10% of the total of 1700 256x256 images with 200 epochs](https://drive.google.com/file/d/1_Bp6kR56uttLXwW9IWdaiGZwmIoDIqlG/view?usp=drive_link)
-- [EPCE model trained on 25% of the total of 1700 256x256 images with 100 epochs](https://drive.google.com/file/d/1_Bp6kR56uttLXwW9IWdaiGZwmIoDIqlG/view?usp=drive_link)
+- [EPCE model trained on 34 full images in black and white for 200 epochs](https://drive.google.com/file/d/1AyuuPePtOPpfvnFMlIIWgz762Zalojl4/view?usp=sharing)
+- [EPCE model trained on 34 full images in black and white for 400 epochs](https://drive.google.com/file/d/1DU3pNbqjESL-X_H2PXLTNSDH7avRaesN/view?usp=sharing)
+- [EPCE model trained on 2% of the total of 1700 256x256 tiled coloured images with 200 epochs](mettrelien)
 
 
 ## Evaluation of the model
@@ -183,7 +187,7 @@ The performance of the network can be evaluated using:
 python3 test.py --ckpt_path /path/to/checkpoint
 ```
 
-- Test results (LDR input, HDR prediction and HDR ground truth) are stored in the **`test_results`** directory.
+- Test results (LDR input, HDR prediction and HDR ground truth) are stored in the **`test_results`** directory. If no images should be stored, the corresponding part can be commented in the code.
 - HDR images can be visualised using [OpenHDRViewer](https://viewer.openhdr.org) or by installing [HDR + WCG Image Viewer](https://apps.microsoft.com/detail/9PGN3NWPBWL9?rtc=1&hl=fr-ch&gl=CH) on windows.
 - If the checkpoint path is not specified, it defaults to `checkpoints/latest.ckpt` for evaluating the model.
 
@@ -191,6 +195,8 @@ python3 test.py --ckpt_path /path/to/checkpoint
 ## Acknowledgement
 
 This project on HDR reconstruction was provided by the [Laboratory of Integrated Performance in Design (LIPID)](https://www.epfl.ch/labs/lipid/) at EPFL and supervised by Stephen Wasilewski and Cho Yunjoung. 
+
+We are grateful to Stephen Wasilewski, Cho Yunjoung and the entire team at LIPID for their support and guidance throughout this project. 
 
 The code was adapted from the previously cited [repository](https://github.com/jqtangust/epce-hdr).
 
