@@ -199,6 +199,8 @@ The generated test HDR images for each of the above models can be found at the f
 - [Test results of EPCE model trained on 34 full images in black and white for 400 epochs](https://drive.google.com/drive/folders/1hamkzUn0yuthCIhBA1jYqAG_QURVxUHZ?usp=sharing)
 - [Test results of the EPCE model trained on 2% of the total of 1700 256x256 tiled coloured images with 200 epochs](https://drive.google.com/drive/folders/1YQpXP0tta-8KXKB51ivSpa-P926QEyHh?usp=sharing)
 
+The three slurm output files of the tests containing the SSIM and PSNR loss metrics can be found in the folder `test slurm output files`.
+
 
 ## Acknowledgement
 
