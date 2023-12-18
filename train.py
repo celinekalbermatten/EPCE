@@ -180,6 +180,7 @@ for epoch in range(opt.epochs):
         # accumulate the loss
         total_loss += loss.item()
 
+        """
         # save the results
         if (batch + 1) % opt.save_results_after == 0: 
             save_ldr_image(img_tensor=input, batch=0, path="./training_results/ldr_e_{}_b_{}.jpg".format(epoch, batch + 1),)
@@ -187,7 +188,7 @@ for epoch in range(opt.epochs):
             save_hdr_image(img_tensor=output, batch=0, path="./training_results/generated_hdr_e_{}_b_{}.hdr".format(epoch, batch + 1),)
             
             save_hdr_image(img_tensor=output_true, batch=0, path="./training_results/gt_hdr_e_{}_b_{}.hdr".format(epoch, batch + 1),)
-        
+        """
 
     print(f"Training loss: {losses_epoch[-1]}")
     losses_train.append(losses_epoch[-1])

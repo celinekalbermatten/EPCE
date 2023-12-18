@@ -4,7 +4,7 @@ import torch.nn as nn
 from skimage.measure import compare_ssim
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-from data_loader import HDRDataset, decrease_data_size
+from data_loader import HDRDataset
 from options import Options
 import EPCE_model
 from util import make_required_directories, save_hdr_image, save_ldr_image
@@ -94,13 +94,13 @@ with torch.no_grad():
 
         for batch_ind in range(len(output.data)):
 
-            """# save the generated images
+            # save the generated images
             save_ldr_image(img_tensor=input, batch=batch_ind, path="./test_results/ldr_b_{}_{}.png".format(batch, batch_ind),)
             
             save_hdr_image(img_tensor=output, batch=batch_ind, path="./test_results/generated_hdr_b_{}_{}.hdr".format(batch, batch_ind),)
             
             save_hdr_image(img_tensor=ground_truth, batch=batch_ind, path="./test_results/gt_hdr_b_{}_{}.hdr".format(batch, batch_ind),)
-            """ 
+             
             if opt.log_scores:
                 # calculate the PSNR score
                 mse = mse_loss(output.data[batch_ind], ground_truth.data[batch_ind])
