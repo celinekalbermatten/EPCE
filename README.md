@@ -125,9 +125,9 @@ The dataset should have the following folder structure:
 - The train and test dataset of 34 full images in black and white can be dowloaded [here](https://drive.google.com/drive/folders/1qgAQajoZujeJ700HGq5aJ6Ym9kww8Zad?usp=sharing)
 
 
-### Create your own dataset
+### Create your own coloured tiled dataset
 
-If you want to generate a dataset from your own images, order your LDR and HDR images according to the following folder structure:
+If you want to generate a dataset from your own coloured tiled images, order your LDR and HDR images according to the following folder structure:
 
 ```
 > NAME_OF_THE_FOLDER_WITH_THE_DATA (put as data path)
@@ -152,9 +152,9 @@ python3 split_data.py data_path
 
 **Note:** `data_path` is the path (str) to the dataset on your local computer
 
-### Reduce the size of the tiled dataset
+### Reduce the size of the coloured tiled dataset
 
-Since the EPCE model is very large and training on a lot of coloured images takes a lot of time, the dataset can be reduced to a certain percentage of it. By doing so, the precision of the model will be less high but the training time is decreased significantly. 
+Since the EPCE model is very large and training on a lot of coloured tiled images takes a lot of time, the dataset can be reduced to a certain percentage of it. By doing so, the precision of the model will be less high but the training time is decreased significantly. 
 In order to reduce the dataset, the file `reduce_tiled_dataset.py` can be executed. A new directory containing the reduced dataset is created and the model can then be trained on this reduced dataset. The reduced dataset consists of tiled images for training as well as for testing. No full images are included. 
 
 
