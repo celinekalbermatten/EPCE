@@ -150,7 +150,7 @@ python3 split_data.py data_path
 
 **Note:** `data_path` is the path (str) to the dataset on your local computer
 
-### Reduce the size of the dataset
+### Reduce the size of the tiled dataset
 
 Since the EPCE model is very large and training on a lot of coloured images takes a lot of time, the dataset can be reduced to a certain percentage of it. By doing so, the precision of the model will be less high but the training time is decreased significantly. 
 In order to reduce the dataset, the file `reduce_tiled_dataset.py` can be executed. A new directory containing the reduced dataset is created and the model can then be trained on this reduced dataset. The reduced dataset consists of tiled images for training as well as for testing. No full images are included. 
