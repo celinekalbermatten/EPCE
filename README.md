@@ -19,7 +19,7 @@ The repository was created within the scope of a Machine Learning project during
 - [Files](#files)
 - [Dataset](#dataset)
 - [Training](#training)
-- [Evaluation of the model](#evaluation of the model)
+- [Evaluation](#evaluation)
 - [Acknowledgement](#acknowledgement)
 
 ## Introduction
@@ -179,7 +179,7 @@ Some pre-trained models can be downloaded from the following links. It always co
 - [EPCE model trained on 2% of the total of 1700 256x256 tiled coloured images with 200 epochs](https://drive.google.com/file/d/1uZTgso8eQrJTSvu0vqfmGSodXr5uhh1e/view?usp=sharing)
 
 
-## Evaluation of the model
+## Evaluation
 
 The performance of the network can be evaluated using: 
 
