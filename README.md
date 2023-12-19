@@ -81,9 +81,9 @@ The file `test.py`evaluates the trained HDR image model. It loads test data, app
 
 The file `options.py` contains a class Options that defines and handles various settings and configurations used for training, debugging, and evaluation of the EPCE model. It uses the argparse module to define command-line arguments for different options like batch size, learning rate, number of epochs, GPU IDs, debugging flags, and testing options such as checkpoint paths and logging scores during evaluation. The parse() method parses these options and returns the parsed arguments.
 
-The file `vgg.py` implements a VGG19 network for perceptual loss computation during training of HDR image generation models, using pre-trained layers to extract features and compute the loss.
-
 The file `util.py` contains several utility functions including methods for checkpoint loading and saving, HDR image tonemapping, saving HDR and LDR images, updating learning rates and plotting losses. 
+
+The file `vgg.py` implements a VGG19 network for perceptual loss computation during training of HDR image generation models, using pre-trained layers to extract features and compute the loss.
 
 
 ## Dataset
