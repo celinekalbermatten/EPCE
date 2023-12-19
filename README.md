@@ -19,7 +19,7 @@ The repository was created within the scope of a Machine Learning project during
 - [Files](#files)
 - [Dataset](#dataset)
 - [Training](#training)
-- [Evaluation of the model](#evaluationofthemodel)
+- [Evaluation of the model](#evaluation of the model)
 - [Acknowledgement](#acknowledgement)
 
 ## Introduction
