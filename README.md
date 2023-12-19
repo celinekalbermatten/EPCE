@@ -71,7 +71,9 @@ The file `split_data.py` creates a dataset in the structure needed for the train
 
 The file `reduce_tiled_dataset.py` reduces the created dataset to a certain percentage of it. More information can be found in the part about the [dataset](#dataset).
 
-The file `dataloader.py` defines a custom HDR class that loads LDR and HDR images. It provides methods to transform the images into tensors and organize the into a dictionary. **Note:** The path to the dataset has to be set in line 22 and 24. 
+The file `dataloader.py` defines a custom HDR class that loads LDR and HDR images. It provides methods to transform the images into tensors and organize the into a dictionary. 
+
+>**_Note:_** The path to the dataset has to be set in line 22 and 24. 
 
 The file `EPCE_model.py` implements a neural network architecture for HDR image processing and enhancement. It includes modules for curve estimation using polynomial functions, pixel-wise learning for image refinement and a Pyramid-Path Vision Transformer (PPViT) with transformer blocks, attention mechanisms and up- and downsampling layers, enabling advanced HDR image reconstruction. 
 
