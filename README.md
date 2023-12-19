@@ -22,7 +22,7 @@ The repository was created within the scope of a Machine Learning project during
 - [Evaluation](#evaluation)
 - [Acknowledgement](#acknowledgement)
 
-## Introcution
+## Introduction
 Due to different physical imaging parameters, the tone-mapping functions between images and real radiance are highly diverse, which makes HDR reconstruction extremely challenging. Existing solutions can not explicitly clarify a corresponding relationship between the tone-mapping function and the generated HDR image, but this relationship is vital when guiding the reconstruction of HDR images. To address this problem, we propose a method to explicitly estimate the tone mapping function and its corresponding HDR image in one network.
 
 ## Setup
